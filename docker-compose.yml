@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  zap:
+    image: zaproxy/zap-stable
+    container_name: zap
+    ports:
+      - "8080:8080"
+    command: ["zap.sh", "-daemon", "-host", "0.0.0.0", "-port", "8080", "-config", "api.disablekey=true"]
+    # API key disabled for local dev; set ZAP_API_KEY in prod.
+  juice-shop:
+    image: bkimminich/juice-shop
+    container_name: juice-shop
+    ports:
+      - "3000:3000"
+    # No auth needed for local dev; ensure localhost only.

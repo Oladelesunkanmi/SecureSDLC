@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker --version)",
+      "Bash(py --version)",
+      "Bash(git init *)",
+      "Bash(py -3.13 -m venv .venv)",
+      "Bash(.venv/Scripts/python.exe --version)",
+      "Bash(.venv/Scripts/python.exe -c \"import django; print\\(django.get_version\\(\\)\\)\")",
+      "Bash(.venv/Scripts/python.exe -I -B -c \"import ast,sys; [ast.parse\\(open\\(f,encoding='utf-8'\\).read\\(\\),f\\) for f in ['manage.py','config/urls.py','config/wsgi.py','config/asgi.py','config/settings/base.py','config/settings/dev.py','config/settings/prod.py']]; print\\('syntax ok'\\)\")",
+      "Bash(.venv/Scripts/python.exe -c \"import os; os.environ.setdefault\\('DJANGO_SETTINGS_MODULE','config.settings.dev'\\); from django.core.management import execute_from_command_line as e; e\\(['manage.py','check']\\)\")",
+      "Bash(.venv/Scripts/python.exe -c \"import os; os.environ.setdefault\\('DJANGO_SETTINGS_MODULE','config.settings.dev'\\); from django.core.management import execute_from_command_line as e; e\\(['manage.py','migrate']\\)\")",
+      "Bash(.venv/Scripts/python.exe -c \"import os; os.environ.setdefault\\('DJANGO_SETTINGS_MODULE','config.settings.dev'\\); import django; django.setup\\(\\); from django.test import Client; c=Client\\(\\); print\\('admin login:', c.get\\('/admin/login/'\\).status_code\\); print\\('admin index:', c.get\\('/admin/'\\).status_code\\); print\\('root:', c.get\\('/'\\).status_code\\)\")",
+      "Bash(.venv/Scripts/python.exe -c \"import os; os.environ.setdefault\\('DJANGO_SETTINGS_MODULE','config.settings.dev'\\); import django; django.setup\\(\\); from django.test import Client; c=Client\\(\\); h={'HTTP_HOST':'localhost'}; print\\('admin login:', c.get\\('/admin/login/', **h\\).status_code\\); print\\('admin index:', c.get\\('/admin/', **h\\).status_code\\); print\\('root:', c.get\\('/'\\).status_code\\)\")",
+      "Bash(.venv/Scripts/python.exe -c \"import os; os.environ.setdefault\\('DJANGO_SETTINGS_MODULE','config.settings.dev'\\); import django; django.setup\\(\\); from django.test import Client; c=Client\\(\\); r=c.get\\('/', HTTP_HOST='localhost'\\); print\\('root status:', r.status_code\\)\")",
+      "Bash(.venv/Scripts/python.exe -c \"import os; os.environ.setdefault\\('DJANGO_SETTINGS_MODULE','config.settings.dev'\\); import django; django.setup\\(\\); from django.test import Client; c=Client\\(\\); r=c.get\\('/', HTTP_HOST='localhost'\\); print\\('status', r.status_code\\); print\\('type', r.get\\('Content-Type'\\)\\); print\\('body', r.content[:300]\\)\")",
+      "Bash(.venv/Scripts/python.exe -c \"import os; os.environ.setdefault\\('DJANGO_SETTINGS_MODULE','config.settings.dev'\\); import django; django.setup\\(\\); from django.urls import resolve; print\\(resolve\\('/'\\)\\)\")",
+      "Bash(.venv/Scripts/python.exe -c \"import os; os.environ.setdefault\\('DJANGO_SETTINGS_MODULE','config.settings.dev'\\); import django; django.setup\\(\\); from django.conf import settings; from django.test import Client; c=Client\\(\\); [print\\(p, c.get\\(p, HTTP_HOST='localhost'\\).status_code, c.get\\(p, HTTP_HOST='localhost'\\).redirect_chain\\) for p in ['/', '/nope/', '/admin/']]; print\\('DEBUG', settings.DEBUG\\); print\\('APPS', settings.INSTALLED_APPS\\)\")",
+      "Bash(.venv/Scripts/python.exe -c \"import os; os.environ.setdefault\\('DJANGO_SETTINGS_MODULE','config.settings.dev'\\); import django; django.setup\\(\\); from django.conf import settings; from django.test import Client; c=Client\\(\\); [print\\(p, c.get\\(p, HTTP_HOST='localhost'\\).status_code\\) for p in ['/', '/', '/nope/', '/admin/']]; print\\('DEBUG', settings.DEBUG\\); print\\('staticfiles', 'django.contrib.staticfiles' in settings.INSTALLED_APPS\\)\")",
+      "Bash(git commit *)",
+      "Bash(git add *)",
+      "Bash(docker version *)",
+      "Bash(docker pull *)"
+    ]
+  }
+}
