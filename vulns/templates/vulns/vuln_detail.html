@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% block title %}{{ vuln.title }} – {{ project.name }} – SecureSDLC{% endblock %}
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'projects:list' %}">Projects</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'projects:detail' pk=project.pk %}">{{ project.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'vulns:list' project_id=project.pk %}">Vulnerabilities</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Finding #{{ vuln.id }}</li>
+  </ol>
+</nav>
+
+<!-- Header Banner -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h2 mb-1">{{ vuln.title }}</h1>
+    <span class="text-muted small">Reported by {{ vuln.reporter.username }} on {{ vuln.created_at|date:"d M Y H:i" }}</span>
+  </div>
+  <div>
+    <span class="badge fs-6 bg-{% if vuln.severity == 'CRITICAL' %}danger{% elif vuln.severity == 'HIGH' %}warning text-dark{% elif vuln.severity == 'MEDIUM' %}info text-dark{% elif vuln.severity == 'LOW' %}secondary{% else %}light text-dark border{% endif %} me-2">
+      {{ vuln.severity }}
+    </span>
+    <span class="badge fs-6 bg-{% if vuln.status == 'OPEN' %}danger{% elif vuln.status == 'FIXED' %}primary{% elif vuln.status == 'VERIFIED' %}success{% else %}dark{% endif %}">
+      {{ vuln.get_status_display }}
+    </span>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <!-- Left column: Finding details -->
+  <div class="col-lg-8">
+    <div class="card mb-4 shadow-sm">
+      <div class="card-header bg-dark text-white">
+        <h5 class="mb-0 fs-6">Technical Details</h5>
+      </div>
+      <div class="card-body">
+        <div class="row mb-3">
+          <div class="col-sm-4 text-muted">Affected Component:</div>
+          <div class="col-sm-8"><code class="fw-bold">{{ vuln.affected_component }}</code></div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-sm-4 text-muted">OWASP Category:</div>
+          <div class="col-sm-8">
+            {% if vuln.owasp_category %}
+              <span class="badge bg-info text-dark">{{ vuln.get_owasp_category_display }}</span>
+            {% else %}
+              <span class="text-muted">—</span>
+            {% endif %}
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-sm-4 text-muted">CVSS Base Score:</div>
+          <div class="col-sm-8">
+            <span class="fs-5 fw-bold">{{ vuln.cvss_score }}</span> / 10.0
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-sm-4 text-muted">CVSS Vector:</div>
+          <div class="col-sm-8">
+            {% if vuln.cvss_vector %}
+              <code class="small text-break">{{ vuln.cvss_vector }}</code>
+            {% else %}
+              <span class="text-muted">—</span>
+            {% endif %}
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-sm-4 text-muted">SDLC Phase:</div>
+          <div class="col-sm-8">{{ vuln.phase.get_kind_display|default:"Not associated with a phase" }}</div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-sm-4 text-muted">Due Date:</div>
+          <div class="col-sm-8">{{ vuln.due_date|date:"d M Y"|default:"None set" }}</div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-sm-4 text-muted">Assignee:</div>
+          <div class="col-sm-8">{{ vuln.assignee.username|default:"Unassigned" }}</div>
+        </div>
+        <div class="row mb-0">
+          <div class="col-sm-4 text-muted">Source:</div>
+          <div class="col-sm-8"><span class="badge bg-secondary">{{ vuln.get_source_display }}</span></div>
+        </div>
+
+        <hr>
+
+        <h6 class="fw-semibold mb-2">Description / PoC</h6>
+        <div class="p-3 bg-light rounded border text-break font-monospace small" style="white-space: pre-wrap;">{{ vuln.description }}</div>
+      </div>
+    </div>
+
+    <!-- Workflow Status Transitions -->
+    {% if available_transitions %}
+      <div class="card border-primary mb-4 shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0 fs-6">Update Finding Status</h5>
+        </div>
+        <div class="card-body">
+          <form method="post" action="{% url 'vulns:transition' project_id=project.pk vid=vuln.pk %}">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Audit Note / Verification Summary</label>
+              <textarea name="note" class="form-control" rows="2" placeholder="Describe fix details, verification test steps, or reason for regression..."></textarea>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+              {% for status_val, status_name in available_transitions %}
+                <button type="submit" name="new_status" value="{{ status_val }}" class="btn btn-outline-primary fw-semibold">
+                  Move to {{ status_name }}
+                </button>
+              {% endfor %}
+            </div>
+          </form>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Right column: Event Timeline -->
+  <div class="col-lg-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-header bg-dark text-white">
+        <h5 class="mb-0 fs-6">Audit Event History</h5>
+      </div>
+      <div class="card-body p-0">
+        <ul class="list-group list-group-flush">
+          {% for event in events %}
+          <li class="list-group-item">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <span class="badge bg-secondary">
+                {{ event.from_status|default:"OPEN" }} → {{ event.to_status }}
+              </span>
+              <small class="text-muted">{{ event.created_at|date:"d M H:i" }}</small>
+            </div>
+            <div class="small fw-semibold">{{ event.actor.username|default:"System" }}</div>
+            {% if event.note %}
+              <div class="small text-muted mt-1 fst-italic">"{{ event.note }}"</div>
+            {% endif %}
+          </li>
+          {% empty %}
+          <li class="list-group-item text-muted">No status changes recorded yet.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<a href="{% url 'vulns:list' project_id=project.pk %}" class="btn btn-secondary">Back to Vulnerabilities</a>
+{% endblock %}

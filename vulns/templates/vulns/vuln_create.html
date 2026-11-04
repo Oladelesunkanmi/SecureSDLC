@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Log Vulnerability – {{ project.name }} – SecureSDLC{% endblock %}
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'projects:list' %}">Projects</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'projects:detail' pk=project.pk %}">{{ project.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'vulns:list' project_id=project.pk %}">Vulnerabilities</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Log Finding</li>
+  </ol>
+</nav>
+
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card shadow-sm">
+      <div class="card-header bg-danger text-white">
+        <h4 class="mb-0 fs-5">Log Security Vulnerability</h4>
+      </div>
+      <div class="card-body p-4">
+        <p class="text-muted small">
+          Record a penetration testing finding. CVSS v3.1 vector string is required; base score and severity will be computed automatically and cannot be entered manually.
+        </p>
+
+        <form method="post" novalidate>
+          {% csrf_token %}
+
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+          {% endif %}
+
+          <div class="mb-3">
+            <label for="id_title" class="form-label fw-semibold">Finding Title *</label>
+            {{ form.title }}
+            {% if form.title.errors %}<div class="text-danger small">{{ form.title.errors }}</div>{% endif %}
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label for="id_affected_component" class="form-label fw-semibold">Affected Component *</label>
+              {{ form.affected_component }}
+              {% if form.affected_component.errors %}<div class="text-danger small">{{ form.affected_component.errors }}</div>{% endif %}
+            </div>
+            <div class="col-md-6">
+              <label for="id_owasp_category" class="form-label fw-semibold">OWASP Category</label>
+              {{ form.owasp_category }}
+              {% if form.owasp_category.errors %}<div class="text-danger small">{{ form.owasp_category.errors }}</div>{% endif %}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="id_cvss_vector" class="form-label fw-semibold">CVSS:3.1 Vector String *</label>
+            {{ form.cvss_vector }}
+            <div class="form-text small">
+              {{ form.fields.cvss_vector.help_text|safe }}
+            </div>
+            {% if form.cvss_vector.errors %}<div class="text-danger small">{{ form.cvss_vector.errors }}</div>{% endif %}
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-4">
+              <label for="id_phase" class="form-label fw-semibold">Associated Phase</label>
+              {{ form.phase }}
+              {% if form.phase.errors %}<div class="text-danger small">{{ form.phase.errors }}</div>{% endif %}
+            </div>
+            <div class="col-md-4">
+              <label for="id_assignee" class="form-label fw-semibold">Assignee</label>
+              {{ form.assignee }}
+              {% if form.assignee.errors %}<div class="text-danger small">{{ form.assignee.errors }}</div>{% endif %}
+            </div>
+            <div class="col-md-4">
+              <label for="id_due_date" class="form-label fw-semibold">Remediation Due Date</label>
+              {{ form.due_date }}
+              {% if form.due_date.errors %}<div class="text-danger small">{{ form.due_date.errors }}</div>{% endif %}
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label for="id_description" class="form-label fw-semibold">Detailed Description & PoC *</label>
+            {{ form.description }}
+            {% if form.description.errors %}<div class="text-danger small">{{ form.description.errors }}</div>{% endif %}
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <a href="{% url 'vulns:list' project_id=project.pk %}" class="btn btn-outline-secondary">Cancel</a>
+            <button type="submit" class="btn btn-danger">Log Vulnerability</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

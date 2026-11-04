@@ -13,3 +13,4 @@ class VulnerabilityAdmin(admin.ModelAdmin):
 class VulnerabilityEventAdmin(admin.ModelAdmin):
     list_display = ("vulnerability", "from_status", "to_status", "actor", "created_at")
     list_filter = ("from_status", "to_status")
+

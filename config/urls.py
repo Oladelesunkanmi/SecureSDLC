@@ -12,6 +12,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),
     path("projects/<int:project_id>/phases/", include("phases.urls")),
+    path("projects/<int:project_id>/vulns/", include("vulns.urls")),
     path("projects/", include("projects.urls")),
     # Root redirects to the project list (the dashboard home per CLAUDE.md section 6).
     path("", login_required(RedirectView.as_view(pattern_name="projects:list")), name="home"),

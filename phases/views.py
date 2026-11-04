@@ -160,3 +160,4 @@ class PhaseReopenView(LoginRequiredMixin, ProjectMemberRequiredMixin, View):
             messages.error(request, str(e))
 
         return redirect("phases:detail", project_id=self.project.pk, kind=phase.kind.lower())
+

@@ -368,3 +368,4 @@ class AgileReopenTests(TestCase):
     def test_waterfall_reopen_refused(self):
         with self.assertRaises(ValueError):
             reopen_phase(self.waterfall_project, self.wf_req, actor=self.pm_user)
+

@@ -153,3 +153,4 @@ def reopen_phase(project, phase: Phase, actor) -> None:
             reasons=["Phase reopened for a new iteration."],
             actor=actor,
         )
+

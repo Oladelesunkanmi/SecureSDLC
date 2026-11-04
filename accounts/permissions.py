@@ -33,3 +33,18 @@ def can_advance_phase(user, project) -> bool:
 def can_reopen_phase(user, project) -> bool:
     """Check whether a user can reopen an Agile phase (Admin, PM)."""
     return can_advance_phase(user, project)
+
+
+def can_create_vuln(user, project) -> bool:
+    """Check whether a user can create a vulnerability finding (Admin, Pentester)."""
+    if not user or not user.is_authenticated:
+        return False
+    if has_global_role(user, User.Role.ADMIN):
+        return True
+    from projects.models import ProjectMember
+
+    return ProjectMember.objects.filter(
+        project=project,
+        user=user,
+        project_role=ProjectMember.ProjectRole.PENTESTER,
+    ).exists()

@@ -11,3 +11,4 @@ urlpatterns = [
     path("<str:kind>/advance/", views.PhaseAdvanceView.as_view(), name="advance"),
     path("<str:kind>/reopen/", views.PhaseReopenView.as_view(), name="reopen"),
 ]
+
