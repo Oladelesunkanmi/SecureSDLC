@@ -55,6 +55,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Background task queue for ZAP scans (Phase 5).
     "django_q",
+    "accounts",
+    "projects",
+    "phases",
 ]
 
 MIDDLEWARE = [
@@ -125,7 +128,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Set in Phase 1 once the accounts app defines the custom User model.
-# AUTH_USER_MODEL = "accounts.User"
+AUTH_USER_MODEL = "accounts.User"
 
 LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/"
