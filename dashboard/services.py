@@ -164,3 +164,4 @@ def project_metrics(project) -> dict[str, Any]:
         "status_chart": status_chart,
         "progress_chart": progress_chart,
     }
+

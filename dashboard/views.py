@@ -62,3 +62,4 @@ class GlobalDashboardView(LoginRequiredMixin, View):
         return render(request, "dashboard/global_dashboard.html", {
             "projects_data": projects_data,
         })
+

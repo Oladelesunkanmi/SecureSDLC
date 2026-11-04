@@ -10,6 +10,9 @@
     <a href="{% url 'dashboard:project' project_id=project.pk %}" class="btn btn-outline-info me-2">
       Dashboard
     </a>
+    <a href="{% url 'reports:download' project_id=project.pk %}" class="btn btn-outline-success me-2">
+      PDF Report
+    </a>
     <a href="{% url 'scans:list' project_id=project.pk %}" class="btn btn-outline-primary me-2">
       Scans & Targets
     </a>

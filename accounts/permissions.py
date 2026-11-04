@@ -68,3 +68,8 @@ def can_register_target(user, project) -> bool:
 def can_trigger_scan(user, project) -> bool:
     """Check whether a user can trigger a ZAP scan (Admin, Pentester)."""
     return can_create_vuln(user, project)
+
+
+def can_generate_report(user, project) -> bool:
+    """Check whether a user can generate a PDF report (Admin, PM, Pentester)."""
+    return can_register_target(user, project)

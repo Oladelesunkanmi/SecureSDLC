@@ -211,3 +211,4 @@ class DashboardPermissionViewTests(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertContains(resp, "Global Security Risk Dashboard")
         self.assertContains(resp, "Access Test Proj")
+

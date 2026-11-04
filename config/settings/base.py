@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     "vulns",
     "scans",
     "dashboard",
+    "reports",
 ]
 
 MIDDLEWARE = [
