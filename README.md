@@ -166,9 +166,9 @@ Apps are added per phase: `accounts`, `projects`, `phases`, `vulns`, `scans`,
 
 | Phase | Scope | Status |
 |---|---|---|
-| 0 | Environment and repository | In progress |
-| 1 | Accounts and authentication | Not started |
-| 2 | Projects and membership | Not started |
+| 0 | Environment and repository | Completed |
+| 1 | Accounts and authentication | Completed |
+| 2 | Projects and membership | Completed |
 | 3 | Phases, checklists, phase gate | Not started |
 | 4 | Vulnerability management | Not started |
 | 5 | ZAP scanner integration | Not started |

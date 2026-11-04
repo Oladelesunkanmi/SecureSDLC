@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}{{ project.name }} – SecureSDLC{% endblock %}
+{% block content %}
+<h1>{{ project.name }}</h1>
+<p class="text-muted">{{ project.get_sdlc_model_display }} · Created {{ project.created_at|date:"d M Y" }}</p>
+{% if project.description %}<p>{{ project.description }}</p>{% endif %}
+
+<div class="row mt-4">
+  <div class="col-md-7">
+    <h3>Phases</h3>
+    <table class="table">
+      <thead><tr><th>#</th><th>Phase</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for phase in phases %}
+        <tr{% if phase == project.current_phase %} class="table-active"{% endif %}>
+          <td>{{ phase.order }}</td>
+          <td>{{ phase.get_kind_display }}</td>
+          <td>
+            {% if phase.status == "COMPLETED" %}
+              <span class="badge bg-success">Completed</span>
+            {% elif phase.status == "IN_PROGRESS" %}
+              <span class="badge bg-primary">In Progress</span>
+            {% else %}
+              <span class="badge bg-secondary">Not Started</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col-md-5">
+    <div class="d-flex justify-content-between align-items-center">
+      <h3>Members</h3>
+      {% if user.role == "ADMIN" or membership.project_role == "PM" %}
+        <a href="{% url 'projects:members' pk=project.pk %}" class="btn btn-sm btn-outline-primary">Manage</a>
+      {% endif %}
+    </div>
+    <ul class="list-group">
+      {% for m in members %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        {{ m.user.username }}
+        <span class="badge bg-info text-dark">{{ m.get_project_role_display }}</span>
+      </li>
+      {% empty %}
+      <li class="list-group-item text-muted">No members.</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}
+

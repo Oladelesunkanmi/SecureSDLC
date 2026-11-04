@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}New Project – SecureSDLC{% endblock %}
+{% block content %}
+<h1>Create Project</h1>
+<form method="post" novalidate>
+  {% csrf_token %}
+  <div class="mb-3">
+    <label for="id_name" class="form-label">Project Name</label>
+    <input type="text" name="name" id="id_name" class="form-control" value="{{ form.name.value|default_if_none:'' }}" required>
+    {% if form.name.errors %}<div class="text-danger">{{ form.name.errors }}</div>{% endif %}
+  </div>
+  <div class="mb-3">
+    <label for="id_description" class="form-label">Description</label>
+    <textarea name="description" id="id_description" class="form-control" rows="3">{{ form.description.value|default_if_none:'' }}</textarea>
+  </div>
+  <div class="mb-3">
+    <label for="id_sdlc_model" class="form-label">SDLC Model</label>
+    <select name="sdlc_model" id="id_sdlc_model" class="form-select" required>
+      <option value="">-- Select --</option>
+      {% for value, label in form.fields.sdlc_model.choices %}
+        <option value="{{ value }}" {% if form.sdlc_model.value == value %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+    {% if form.sdlc_model.errors %}<div class="text-danger">{{ form.sdlc_model.errors }}</div>{% endif %}
+  </div>
+  <button type="submit" class="btn btn-primary">Create</button>
+  <a href="{% url 'projects:list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}
+

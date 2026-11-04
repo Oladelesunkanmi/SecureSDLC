@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Members – {{ project.name }} – SecureSDLC{% endblock %}
+{% block content %}
+<h1>Manage Members — {{ project.name }}</h1>
+
+<h3 class="mt-4">Current Members</h3>
+<table class="table">
+  <thead><tr><th>User</th><th>Project Role</th><th></th></tr></thead>
+  <tbody>
+    {% for m in members %}
+    <tr>
+      <td>{{ m.user.username }}</td>
+      <td>{{ m.get_project_role_display }}</td>
+      <td>
+        <form method="post" class="d-inline">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="remove">
+          <input type="hidden" name="user_id" value="{{ m.user.pk }}">
+          <button type="submit" class="btn btn-sm btn-outline-danger"
+                  onclick="return confirm('Remove {{ m.user.username }}?')">Remove</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h3 class="mt-4">Add Member</h3>
+<form method="post" novalidate>
+  {% csrf_token %}
+  <input type="hidden" name="action" value="add">
+  <div class="row g-2 align-items-end">
+    <div class="col-md-5">
+      <label for="id_user" class="form-label">User</label>
+      <select name="user" id="id_user" class="form-select">
+        {% for u in form.fields.user.queryset %}
+          <option value="{{ u.pk }}">{{ u.username }} ({{ u.get_role_display }})</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label for="id_project_role" class="form-label">Project Role</label>
+      <select name="project_role" id="id_project_role" class="form-select">
+        {% for value, label in form.fields.project_role.choices %}
+          <option value="{{ value }}">{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-3">
+      <button type="submit" class="btn btn-primary">Add</button>
+    </div>
+  </div>
+</form>
+
+<a href="{% url 'projects:detail' pk=project.pk %}" class="btn btn-secondary mt-3">Back to Project</a>
+{% endblock %}
+

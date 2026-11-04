@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}Home – SecureSDLC{% endblock %}
+{% block content %}
+<h1>Welcome, {{ user.username }}</h1>
+<p class="lead">You are logged in as <strong>{{ user.get_role_display }}</strong>.</p>
+<p>The project list will appear here once the Projects app is built (Phase 2).</p>
+{% endblock %}
+
