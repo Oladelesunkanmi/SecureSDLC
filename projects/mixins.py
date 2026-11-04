@@ -18,8 +18,9 @@ class ProjectMemberRequiredMixin:
     """
 
     def dispatch(self, request, *args, **kwargs):
+        project_id = kwargs.get("project_id") or kwargs.get("pk")
         try:
-            self.project = Project.objects.get(pk=kwargs.get("pk"))
+            self.project = Project.objects.get(pk=project_id)
         except Project.DoesNotExist:
             raise Http404
 

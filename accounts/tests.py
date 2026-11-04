@@ -31,3 +31,4 @@ class AccountsTests(TestCase):
 
     def test_has_global_role_anonymous_or_none(self):
         self.assertFalse(has_global_role(None, User.Role.ADMIN))
+

@@ -14,7 +14,7 @@
         {% for phase in phases %}
         <tr{% if phase == project.current_phase %} class="table-active"{% endif %}>
           <td>{{ phase.order }}</td>
-          <td>{{ phase.get_kind_display }}</td>
+          <td><a href="{% url 'phases:detail' project_id=project.pk kind=phase.kind|lower %}" class="fw-semibold">{{ phase.get_kind_display }}</a></td>
           <td>
             {% if phase.status == "COMPLETED" %}
               <span class="badge bg-success">Completed</span>

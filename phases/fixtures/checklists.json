@@ -1,0 +1,478 @@
+[
+  {
+    "model": "phases.checklistitem",
+    "pk": 1,
+    "fields": {
+      "phase_kind": "REQUIREMENTS",
+      "code": "REQ-01",
+      "text": "Threat model drafted (STRIDE methodology)",
+      "guidance": "Identify spoofing, tampering, repudiation, information disclosure, DoS, and elevation of privilege threats.",
+      "required": true,
+      "owasp_ref": "A04:2021",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 2,
+    "fields": {
+      "phase_kind": "REQUIREMENTS",
+      "code": "REQ-02",
+      "text": "Security requirements documented and scoped",
+      "guidance": "Define non-functional security requirements, security controls, and acceptance criteria.",
+      "required": true,
+      "owasp_ref": "",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 3,
+    "fields": {
+      "phase_kind": "REQUIREMENTS",
+      "code": "REQ-03",
+      "text": "Data classification and privacy requirements defined",
+      "guidance": "Categorise sensitive data (PII, credentials, payment data) and legal retention limits.",
+      "required": true,
+      "owasp_ref": "A02:2021",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 4,
+    "fields": {
+      "phase_kind": "REQUIREMENTS",
+      "code": "REQ-04",
+      "text": "Authentication and authorization requirements stated",
+      "guidance": "State role definitions, password complexity policy, MFA requirements, and session rules.",
+      "required": true,
+      "owasp_ref": "A07:2021",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 5,
+    "fields": {
+      "phase_kind": "REQUIREMENTS",
+      "code": "REQ-05",
+      "text": "Regulatory and compliance obligations identified",
+      "guidance": "Identify applicable regulations (e.g. GDPR, PCI-DSS, ISO 27001) if applicable.",
+      "required": false,
+      "owasp_ref": "",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 6,
+    "fields": {
+      "phase_kind": "DESIGN",
+      "code": "DES-01",
+      "text": "Architecture diagram reviewed with security team",
+      "guidance": "Produce and review high-level and component diagrams showing networks, services, and datastores.",
+      "required": true,
+      "owasp_ref": "A04:2021",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 7,
+    "fields": {
+      "phase_kind": "DESIGN",
+      "code": "DES-02",
+      "text": "Trust boundaries and data flows identified",
+      "guidance": "Map untrusted client inputs and inter-service boundaries across the architecture.",
+      "required": true,
+      "owasp_ref": "A04:2021",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 8,
+    "fields": {
+      "phase_kind": "DESIGN",
+      "code": "DES-03",
+      "text": "Attack surface enumerated and minimized",
+      "guidance": "Catalog exposed ports, public APIs, third-party endpoints, and administrative interfaces.",
+      "required": true,
+      "owasp_ref": "A05:2021",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 9,
+    "fields": {
+      "phase_kind": "DESIGN",
+      "code": "DES-04",
+      "text": "Authentication and session management design reviewed",
+      "guidance": "Confirm secure cookie flags (HttpOnly, Secure, SameSite), CSRF defense, and session expiry.",
+      "required": true,
+      "owasp_ref": "A07:2021",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 10,
+    "fields": {
+      "phase_kind": "DESIGN",
+      "code": "DES-05",
+      "text": "Input validation and sanitization strategy defined",
+      "guidance": "Specify allowlist validation patterns, type constraints, and schema enforcement.",
+      "required": true,
+      "owasp_ref": "A03:2021",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 11,
+    "fields": {
+      "phase_kind": "DESIGN",
+      "code": "DES-06",
+      "text": "Secrets management approach chosen and documented",
+      "guidance": "Ensure secrets are kept in environment variables or key vaults, never checked into VCS.",
+      "required": true,
+      "owasp_ref": "A02:2021",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 12,
+    "fields": {
+      "phase_kind": "CODING",
+      "code": "COD-01",
+      "text": "Input validation enforced on all user-controlled data",
+      "guidance": "Verify all form inputs, query params, headers, and payloads are strongly validated server-side.",
+      "required": true,
+      "owasp_ref": "A03:2021",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 13,
+    "fields": {
+      "phase_kind": "CODING",
+      "code": "COD-02",
+      "text": "Output encoding used in templates to prevent XSS",
+      "guidance": "Ensure framework auto-escaping is active; verify no unsanitized raw HTML or safe filters on user inputs.",
+      "required": true,
+      "owasp_ref": "A03:2021",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 14,
+    "fields": {
+      "phase_kind": "CODING",
+      "code": "COD-03",
+      "text": "Parameterized queries or ORM used exclusively (no raw SQL)",
+      "guidance": "Confirm no raw string concatenation in database queries to prevent SQL injection.",
+      "required": true,
+      "owasp_ref": "A03:2021",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 15,
+    "fields": {
+      "phase_kind": "CODING",
+      "code": "COD-04",
+      "text": "No hardcoded secrets, keys, or passwords in codebase",
+      "guidance": "Scan repository with automated secret scanners or git log inspection.",
+      "required": true,
+      "owasp_ref": "A02:2021",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 16,
+    "fields": {
+      "phase_kind": "CODING",
+      "code": "COD-05",
+      "text": "Third-party dependencies scanned for known vulnerabilities",
+      "guidance": "Run pip-audit, safety, or dependabot to ensure all packages have no active CVEs.",
+      "required": true,
+      "owasp_ref": "A06:2021",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 17,
+    "fields": {
+      "phase_kind": "CODING",
+      "code": "COD-06",
+      "text": "Error handling does not leak stack traces or internal info",
+      "guidance": "Custom 404/500 handlers configured; stack traces suppressed in user-facing responses.",
+      "required": true,
+      "owasp_ref": "A05:2021",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 18,
+    "fields": {
+      "phase_kind": "CODING",
+      "code": "COD-07",
+      "text": "Access control checks enforced on every endpoint",
+      "guidance": "Verify authentication and authorization decorators/mixins are applied to all views.",
+      "required": true,
+      "owasp_ref": "A01:2021",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 19,
+    "fields": {
+      "phase_kind": "TESTING",
+      "code": "TST-01",
+      "text": "DAST scan run against a registered target",
+      "guidance": "Run OWASP ZAP spider and active scan against staging/local environment.",
+      "required": true,
+      "owasp_ref": "A05:2021",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 20,
+    "fields": {
+      "phase_kind": "TESTING",
+      "code": "TST-02",
+      "text": "OWASP Top 10 checklist completed for current release",
+      "guidance": "Verify each of the 2021 Top 10 risk areas has been assessed for this application.",
+      "required": true,
+      "owasp_ref": "A01:2021",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 21,
+    "fields": {
+      "phase_kind": "TESTING",
+      "code": "TST-03",
+      "text": "Manual penetration test cases executed for AuthN and AuthZ",
+      "guidance": "Test privilege escalation, IDOR, brute-force limits, session fixation, and token reuse.",
+      "required": true,
+      "owasp_ref": "A01:2021",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 22,
+    "fields": {
+      "phase_kind": "TESTING",
+      "code": "TST-04",
+      "text": "Security findings triaged and logged with CVSS scores",
+      "guidance": "Record all vulnerabilities discovered, calculate CVSS vectors, and assign to developers.",
+      "required": true,
+      "owasp_ref": "",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 23,
+    "fields": {
+      "phase_kind": "TESTING",
+      "code": "TST-05",
+      "text": "Regression tests verified for resolved security issues",
+      "guidance": "Confirm pentester re-test verification has passed for all fixed defects.",
+      "required": true,
+      "owasp_ref": "",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 24,
+    "fields": {
+      "phase_kind": "DEPLOYMENT",
+      "code": "DEP-01",
+      "text": "Django deployment security checklist (manage.py check --deploy) passes",
+      "guidance": "Run `python manage.py check --deploy` and confirm zero critical security warnings.",
+      "required": true,
+      "owasp_ref": "A05:2021",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 25,
+    "fields": {
+      "phase_kind": "DEPLOYMENT",
+      "code": "DEP-02",
+      "text": "DEBUG disabled in production configuration",
+      "guidance": "Confirm settings.DEBUG = False and proper ALLOWED_HOSTS are configured.",
+      "required": true,
+      "owasp_ref": "A05:2021",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 26,
+    "fields": {
+      "phase_kind": "DEPLOYMENT",
+      "code": "DEP-03",
+      "text": "Production secrets provided exclusively via environment variables",
+      "guidance": "Verify SECRET_KEY and DB credentials are not in settings files or repositories.",
+      "required": true,
+      "owasp_ref": "A02:2021",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 27,
+    "fields": {
+      "phase_kind": "DEPLOYMENT",
+      "code": "DEP-04",
+      "text": "HTTPS enforced and HSTS / secure cookie flags active",
+      "guidance": "SECURE_SSL_REDIRECT, SESSION_COOKIE_SECURE, CSRF_COOKIE_SECURE enabled.",
+      "required": true,
+      "owasp_ref": "A02:2021",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 28,
+    "fields": {
+      "phase_kind": "DEPLOYMENT",
+      "code": "DEP-05",
+      "text": "HTTP Security Headers configured (CSP, X-Frame-Options, etc.)",
+      "guidance": "Configure Content-Security-Policy, X-Content-Type-Options: nosniff, Referrer-Policy.",
+      "required": true,
+      "owasp_ref": "A05:2021",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 29,
+    "fields": {
+      "phase_kind": "DEPLOYMENT",
+      "code": "DEP-06",
+      "text": "Least-privilege database user configured",
+      "guidance": "Database account restricted to DML only; no superuser or DROP table permissions in production.",
+      "required": true,
+      "owasp_ref": "A01:2021",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 30,
+    "fields": {
+      "phase_kind": "DEPLOYMENT",
+      "code": "DEP-07",
+      "text": "Automated backups configured and recovery plan tested",
+      "guidance": "Verify database backup schedules and practice restore procedures.",
+      "required": true,
+      "owasp_ref": "",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 31,
+    "fields": {
+      "phase_kind": "MAINTENANCE",
+      "code": "MNT-01",
+      "text": "Security monitoring and centralized audit logging enabled",
+      "guidance": "Ensure authentication failures, role changes, and gate actions are logged to a tamper-resistant store.",
+      "required": true,
+      "owasp_ref": "A09:2021",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 32,
+    "fields": {
+      "phase_kind": "MAINTENANCE",
+      "code": "MNT-02",
+      "text": "Periodic re-test scheduled (due dates set on open findings)",
+      "guidance": "Set explicit due_date values for any deferred low/medium vulnerabilities.",
+      "required": true,
+      "owasp_ref": "",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 33,
+    "fields": {
+      "phase_kind": "MAINTENANCE",
+      "code": "MNT-03",
+      "text": "Security patching and vulnerability management process documented",
+      "guidance": "Establish SLAs for patch application based on CVSS severity.",
+      "required": true,
+      "owasp_ref": "A06:2021",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "phases.checklistitem",
+    "pk": 34,
+    "fields": {
+      "phase_kind": "MAINTENANCE",
+      "code": "MNT-04",
+      "text": "Incident response plan and emergency security contacts recorded",
+      "guidance": "Document escalation contacts, severity levels, and communication channels.",
+      "required": true,
+      "owasp_ref": "A09:2021",
+      "created_at": "2026-11-01T00:00:00Z",
+      "updated_at": "2026-11-01T00:00:00Z"
+    }
+  }
+]
