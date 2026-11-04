@@ -1,0 +1,9 @@
+# Direct dependencies (CLAUDE.md section 2). Regenerate the exact versions with:
+#   .venv/Scripts/python.exe -m pip freeze > requirements.lock.txt
+
+Django>=5.0,<6.0
+django-q2>=1.6,<2.0
+zaproxy>=0.3
+cvss>=3.0,<4.0
+xhtml2pdf>=0.2.16
+python-dotenv>=1.0,<2.0
