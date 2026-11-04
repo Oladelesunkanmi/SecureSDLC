@@ -95,3 +95,4 @@ class TransitionForm(forms.Form):
         widget=forms.Textarea(attrs={"class": "form-control", "rows": 2, "placeholder": "Reason / re-test verification notes..."}),
         required=False,
     )
+

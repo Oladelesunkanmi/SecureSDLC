@@ -7,6 +7,9 @@
     <p class="text-muted">{{ project.get_sdlc_model_display }} · Created {{ project.created_at|date:"d M Y" }}</p>
   </div>
   <div>
+    <a href="{% url 'scans:list' project_id=project.pk %}" class="btn btn-outline-primary me-2">
+      Scans & Targets
+    </a>
     <a href="{% url 'vulns:list' project_id=project.pk %}" class="btn btn-outline-danger">
       View Vulnerabilities
     </a>

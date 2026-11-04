@@ -92,6 +92,13 @@ class Vulnerability(models.Model):
         related_name="assigned_vulnerabilities",
     )
 
+    scan = models.ForeignKey(
+        "scans.Scan",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="vulnerabilities",
+    )
     zap_alert_id = models.CharField(max_length=100, blank=True, null=True)
     due_date = models.DateField(null=True, blank=True)
 

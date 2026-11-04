@@ -12,3 +12,4 @@ urlpatterns = [
     path("<int:vid>/", views.VulnerabilityDetailView.as_view(), name="detail"),
     path("<int:vid>/transition/", views.VulnerabilityTransitionView.as_view(), name="transition"),
 ]
+

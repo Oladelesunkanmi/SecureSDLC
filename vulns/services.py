@@ -100,3 +100,4 @@ def transition(vuln: Vulnerability, new_status: str, actor, note: str = "") -> V
         )
 
     return event
+

@@ -48,3 +48,23 @@ def can_create_vuln(user, project) -> bool:
         user=user,
         project_role=ProjectMember.ProjectRole.PENTESTER,
     ).exists()
+
+
+def can_register_target(user, project) -> bool:
+    """Check whether a user can register a scan target (Admin, PM, Pentester)."""
+    if not user or not user.is_authenticated:
+        return False
+    if has_global_role(user, User.Role.ADMIN):
+        return True
+    from projects.models import ProjectMember
+
+    return ProjectMember.objects.filter(
+        project=project,
+        user=user,
+        project_role__in=[ProjectMember.ProjectRole.PM, ProjectMember.ProjectRole.PENTESTER],
+    ).exists()
+
+
+def can_trigger_scan(user, project) -> bool:
+    """Check whether a user can trigger a ZAP scan (Admin, Pentester)."""
+    return can_create_vuln(user, project)

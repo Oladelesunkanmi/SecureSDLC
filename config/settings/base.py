@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     "projects",
     "phases",
     "vulns",
+    "scans",
 ]
 
 MIDDLEWARE = [

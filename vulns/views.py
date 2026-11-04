@@ -135,3 +135,4 @@ class VulnerabilityTransitionView(LoginRequiredMixin, ProjectMemberRequiredMixin
             messages.error(request, str(exc))
 
         return redirect("vulns:detail", project_id=self.project.pk, vid=vuln.pk)
+

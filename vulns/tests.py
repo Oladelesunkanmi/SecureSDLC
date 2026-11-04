@@ -317,3 +317,4 @@ class VulnerabilityViewTests(TestCase):
         self.assertEqual(resp.status_code, 302)
         vuln.refresh_from_db()
         self.assertEqual(vuln.status, Vulnerability.Status.FIXED)
+

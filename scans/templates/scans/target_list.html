@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block title %}Scan Targets – {{ project.name }} – SecureSDLC{% endblock %}
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'projects:list' %}">Projects</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'projects:detail' pk=project.pk %}">{{ project.name }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Scan Targets</li>
+  </ol>
+</nav>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="mb-0">Authorized Scan Targets</h1>
+    <small class="text-muted">{{ project.name }}</small>
+  </div>
+  <div>
+    <a href="{% url 'scans:list' project_id=project.pk %}" class="btn btn-outline-primary me-2">View Scans</a>
+    <a href="{% url 'scans:create' project_id=project.pk %}" class="btn btn-danger">Start Scan</a>
+  </div>
+</div>
+
+<div class="row">
+  <!-- Targets Table -->
+  <div class="col-lg-7 mb-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-header bg-dark text-white">
+        <h5 class="mb-0 fs-6">Registered Targets</h5>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Target URL</th>
+                <th>Environment</th>
+                <th>Authorization</th>
+                <th>Authorized By</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for t in targets %}
+              <tr>
+                <td><code>{{ t.url }}</code></td>
+                <td><span class="badge bg-secondary">{{ t.get_environment_display }}</span></td>
+                <td>
+                  {% if t.authorization_confirmed %}
+                    <span class="badge bg-success">Confirmed</span>
+                  {% else %}
+                    <span class="badge bg-danger">Pending</span>
+                  {% endif %}
+                </td>
+                <td><small class="text-muted">{{ t.authorized_by }}</small></td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="4" class="text-center py-4 text-muted">
+                  No scan targets registered yet. Register a test target below.
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Register Form -->
+  <div class="col-lg-5 mb-4">
+    <div class="card shadow-sm">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0 fs-6">Register New Target</h5>
+      </div>
+      <div class="card-body">
+        <div class="alert alert-warning small py-2 mb-3">
+          <strong>Safety Rule:</strong> Scanning is restricted strictly to local/staging hosts on the allowlist (e.g. <code>localhost</code>, <code>127.0.0.1</code>, <code>juice-shop</code>). Production URLs are rejected.
+        </div>
+
+        {% if can_register %}
+          <form method="post" novalidate>
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label for="id_url" class="form-label fw-semibold">Target URL *</label>
+              {{ form.url }}
+              <div class="form-text small">{{ form.fields.url.help_text }}</div>
+              {% if form.url.errors %}<div class="text-danger small">{{ form.url.errors }}</div>{% endif %}
+            </div>
+
+            <div class="mb-3">
+              <label for="id_environment" class="form-label fw-semibold">Environment *</label>
+              {{ form.environment }}
+              {% if form.environment.errors %}<div class="text-danger small">{{ form.environment.errors }}</div>{% endif %}
+            </div>
+
+            <div class="mb-3">
+              <label for="id_authorized_by" class="form-label fw-semibold">Authorized By *</label>
+              {{ form.authorized_by }}
+              <div class="form-text small">{{ form.fields.authorized_by.help_text }}</div>
+              {% if form.authorized_by.errors %}<div class="text-danger small">{{ form.authorized_by.errors }}</div>{% endif %}
+            </div>
+
+            <div class="form-check mb-4">
+              {{ form.authorization_confirmed }}
+              <label class="form-check-label fw-semibold text-danger" for="id_authorization_confirmed">
+                {{ form.authorization_confirmed.label }}
+              </label>
+              {% if form.authorization_confirmed.errors %}
+                <div class="text-danger small">{{ form.authorization_confirmed.errors }}</div>
+              {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Register Target</button>
+          </form>
+        {% else %}
+          <p class="text-muted small">You do not have permission to register targets. Contact a Project Manager or Admin.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<a href="{% url 'projects:detail' pk=project.pk %}" class="btn btn-secondary">Back to Project</a>
+{% endblock %}
