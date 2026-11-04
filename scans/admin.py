@@ -13,3 +13,4 @@ class ScanTargetAdmin(admin.ModelAdmin):
 class ScanAdmin(admin.ModelAdmin):
     list_display = ("id", "tool", "target", "project", "status", "requested_by", "started_at", "finished_at")
     list_filter = ("status", "tool")
+

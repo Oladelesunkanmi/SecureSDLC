@@ -102,3 +102,4 @@ class ZAPClient:
             return []
         except Exception as exc:
             raise ZAPClientError(f"Failed to fetch alerts from ZAP: {exc}") from exc
+

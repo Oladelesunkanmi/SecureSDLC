@@ -15,6 +15,18 @@ showing the logged‑in user and their role, and links to login/logout.
   <div class="container-fluid">
     <a class="navbar-brand" href="/">SecureSDLC</a>
     <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'projects:list' %}">Projects</a>
+          </li>
+          {% if user.role == "ADMIN" %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'dashboard:global' %}">Global Dashboard</a>
+            </li>
+          {% endif %}
+        {% endif %}
+      </ul>
       <ul class="navbar-nav ms-auto">
         {% if user.is_authenticated %}
           <li class="nav-item">

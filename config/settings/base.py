@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "phases",
     "vulns",
     "scans",
+    "dashboard",
 ]
 
 MIDDLEWARE = [

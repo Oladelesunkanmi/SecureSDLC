@@ -133,3 +133,4 @@ class ScanStatusJSONView(LoginRequiredMixin, ProjectMemberRequiredMixin, View):
             "is_complete": scan.status in [Scan.Status.DONE, Scan.Status.FAILED],
             "error_message": scan.error_message,
         })
+

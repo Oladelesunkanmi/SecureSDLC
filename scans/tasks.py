@@ -203,3 +203,4 @@ def import_alerts_to_vulnerabilities(scan: Scan, alerts: list[dict]) -> int:
         imported_count += 1
 
     return imported_count
+

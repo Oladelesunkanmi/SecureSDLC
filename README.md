@@ -172,7 +172,7 @@ Apps are added per phase: `accounts`, `projects`, `phases`, `vulns`, `scans`,
 | 3 | Phases, checklists, phase gate | Completed |
 | 4 | Vulnerability management | Completed |
 | 5 | ZAP scanner integration | Completed |
-| 6 | Dashboard | Not started |
+| 6 | Dashboard | Completed |
 | 7 | PDF reporting | Not started |
 | 8 | Hardening and documentation | Not started |
 

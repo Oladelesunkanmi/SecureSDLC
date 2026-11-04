@@ -12,3 +12,4 @@ urlpatterns = [
     path("scans/<int:sid>/", views.ScanDetailView.as_view(), name="detail"),
     path("scans/<int:sid>/status/", views.ScanStatusJSONView.as_view(), name="status_json"),
 ]
+
