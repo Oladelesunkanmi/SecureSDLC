@@ -411,3 +411,4 @@ flowchart TD
     AdvanceStatus --> LogDecision
     LogDecision --> Finish["Return GateResult (allowed, reasons)"]
 ```
+
