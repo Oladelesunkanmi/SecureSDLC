@@ -1,4 +1,4 @@
-from django.test import TestCase, Client
+from django.test import TestCase, Client, override_settings
 from django.urls import reverse
 from accounts.models import User
 from accounts.permissions import has_global_role
@@ -31,4 +31,14 @@ class AccountsTests(TestCase):
 
     def test_has_global_role_anonymous_or_none(self):
         self.assertFalse(has_global_role(None, User.Role.ADMIN))
+
+    @override_settings(DEBUG=False)
+    def test_custom_404_page_no_stack_trace(self):
+        response = self.client.get("/non-existent-endpoint-xyz-404/")
+        self.assertEqual(response.status_code, 404)
+        self.assertTemplateUsed(response, "404.html")
+        self.assertContains(response, "Page or Resource Not Found", status_code=404)
+        self.assertNotContains(response, "Traceback", status_code=404)
+        self.assertNotContains(response, "Using the URLconf defined in", status_code=404)
+
 

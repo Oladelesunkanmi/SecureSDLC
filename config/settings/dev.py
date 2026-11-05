@@ -16,3 +16,7 @@ ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]"]
 
 # Emails print to the console instead of being sent.
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+# Development-only middleware for screenshot capture
+MIDDLEWARE = MIDDLEWARE + ["accounts.middleware.DevAutoAuthMiddleware"]
+

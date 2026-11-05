@@ -238,7 +238,7 @@
               {% for ev in vuln.events.all %}
               <tr>
                 <td>{{ ev.created_at|date:"Y-m-d H:i" }}</td>
-                <td>{{ ev.from_status|default:"OPEN" }} &rarr; {{ ev.to_status }}</td>
+                <td>{{ ev.from_status|default:"OPEN" }} -&gt; {{ ev.to_status }}</td>
                 <td>{{ ev.actor.username|default:"System" }}</td>
                 <td>{{ ev.note|default:"—" }}</td>
               </tr>

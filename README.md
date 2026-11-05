@@ -77,11 +77,66 @@ The app is at <http://localhost:8000/>. `manage.py` defaults to
 `config.settings.dev` (DEBUG on, SQLite). Production uses
 `DJANGO_SETTINGS_MODULE=config.settings.prod`.
 
-### 5. Create an admin user
+### 5. Create demo accounts or an admin user
+
+To create standard accounts for each role:
+
+```bash
+.venv/Scripts/python.exe manage.py seed_demo_users
+```
+
+Or seed an entire end-to-end demonstration project with checklists, vulnerabilities, scan targets, and reports:
+
+```bash
+.venv/Scripts/python.exe manage.py seed_demo_project
+```
+
+Or create a manual superuser:
 
 ```bash
 .venv/Scripts/python.exe manage.py createsuperuser
 ```
+
+---
+
+## Demo Accounts
+
+All demo accounts share the password `demo123`:
+
+| Username | Global Role | Allowed Actions |
+|---|---|---|
+| `admin` | Admin | Full platform administrative access, user management, global risk dashboard |
+| `pm` | Project Manager | Project creation, member management, phase gate advancement and reopening |
+| `dev` | Developer | Complete checklist items with evidence, transition findings to `FIXED` |
+| `pentester` | Pentester | Log findings, re-test/verify (`VERIFIED`, `CLOSED`), register targets, run ZAP scans |
+
+---
+
+## End-to-End Demo Reproduction
+
+Follow these steps to demonstrate the framework end-to-end:
+
+1. **Seed Demo Project:**
+   ```bash
+   .venv/Scripts/python.exe manage.py seed_demo_project
+   ```
+2. **Phase Gate Evaluation:**
+   - Log in as `pm` (<http://localhost:8000/accounts/login/>).
+   - Navigate to the Requirements phase: all items are complete with evidence, and the gate was successfully advanced.
+   - Navigate to the Design phase: the gate is **blocked** with clear violation notices because required items are pending and an open Critical vulnerability exists.
+3. **Vulnerability Remediation Workflow:**
+   - Log in as `dev`: open the Critical finding. Notice the developer can click **Mark as Fixed** and add remediation notes.
+   - Log in as `pentester`: open the Fixed finding. Notice the pentester can click **Verify Fix** (after re-testing) or **Reject & Re-open**.
+4. **DAST Scanning (Juice Shop & ZAP):**
+   - Start Docker targets (`juice-shop` on port 3000, `zap` on port 8080).
+   - Start background worker: `.venv/Scripts/python.exe manage.py qcluster`.
+   - As `pentester`, navigate to **Scan Targets**, confirm authorization for `http://localhost:3000`, and trigger a scan.
+   - Monitor real-time status polling; upon completion, inspect alerts and click **Import Finding** to convert an alert into a tracked defect in the Testing phase.
+5. **Security Risk Dashboard:**
+   - View real-time risk scores (calculated per §5.4), severity doughnut chart, status bar chart, and phase progress bars.
+   - Log in as `admin` and visit `/dashboard/` to view cross-project risk rankings.
+6. **Executive PDF Report:**
+   - As `pm` or `pentester`, click **Export PDF Report** to download the comprehensive 6-section assessment report.
 
 ---
 
@@ -174,7 +229,7 @@ Apps are added per phase: `accounts`, `projects`, `phases`, `vulns`, `scans`,
 | 5 | ZAP scanner integration | Completed |
 | 6 | Dashboard | Completed |
 | 7 | PDF reporting | Completed |
-| 8 | Hardening and documentation | In progress |
+| 8 | Hardening and documentation | Completed |
 
 ---
 

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}404 - Page Not Found | SecureSDLC{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+  <div class="col-md-6 text-center">
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-5">
+        <h1 class="display-1 text-danger fw-bold">404</h1>
+        <h3 class="mb-3">Page or Resource Not Found</h3>
+        <p class="text-muted mb-4">
+          The requested page does not exist or you do not have permission to view it.
+          For security reasons, resources belonging to projects you are not a member of return a 404 response.
+        </p>
+        <a href="{% url 'projects:list' %}" class="btn btn-primary px-4">Back to Projects</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
