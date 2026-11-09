@@ -11,15 +11,16 @@
 </nav>
 
 <div class="row justify-content-center">
-  <div class="col-lg-8">
-    <div class="card shadow-sm">
-      <div class="card-header bg-danger text-white">
-        <h4 class="mb-0 fs-5">Log Security Vulnerability</h4>
+  <div class="col-lg-9 col-xl-8">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-white py-3 border-bottom">
+        <h1 class="h4 mb-0 fw-bold">Log Security Defect</h1>
+        <small class="text-muted">{{ project.name }} &middot; Penetration testing and code review findings</small>
       </div>
       <div class="card-body p-4">
-        <p class="text-muted small">
-          Record a penetration testing finding. CVSS v3.1 vector string is required; base score and severity will be computed automatically and cannot be entered manually.
-        </p>
+        <div class="alert alert-info py-2 small mb-4">
+          <strong>CVSS v3.1 Derivation:</strong> Enter the CVSS vector string. The base score and severity level are mathematically computed and derived via the standard NVD scale (§5.2). User-supplied severity overrides are prohibited.
+        </div>
 
         <form method="post" novalidate>
           {% csrf_token %}
@@ -29,60 +30,60 @@
           {% endif %}
 
           <div class="mb-3">
-            <label for="id_title" class="form-label fw-semibold">Finding Title *</label>
+            <label for="id_title" class="form-label fw-semibold">Finding Title <span class="text-danger">*</span></label>
             {{ form.title }}
-            {% if form.title.errors %}<div class="text-danger small">{{ form.title.errors }}</div>{% endif %}
+            {% if form.title.errors %}<div class="text-danger small mt-1">{{ form.title.errors|striptags }}</div>{% endif %}
           </div>
 
           <div class="row g-3 mb-3">
             <div class="col-md-6">
-              <label for="id_affected_component" class="form-label fw-semibold">Affected Component *</label>
+              <label for="id_affected_component" class="form-label fw-semibold">Affected Component / Endpoint <span class="text-danger">*</span></label>
               {{ form.affected_component }}
-              {% if form.affected_component.errors %}<div class="text-danger small">{{ form.affected_component.errors }}</div>{% endif %}
+              {% if form.affected_component.errors %}<div class="text-danger small mt-1">{{ form.affected_component.errors|striptags }}</div>{% endif %}
             </div>
             <div class="col-md-6">
               <label for="id_owasp_category" class="form-label fw-semibold">OWASP Category</label>
               {{ form.owasp_category }}
-              {% if form.owasp_category.errors %}<div class="text-danger small">{{ form.owasp_category.errors }}</div>{% endif %}
+              {% if form.owasp_category.errors %}<div class="text-danger small mt-1">{{ form.owasp_category.errors|striptags }}</div>{% endif %}
             </div>
           </div>
 
           <div class="mb-3">
-            <label for="id_cvss_vector" class="form-label fw-semibold">CVSS:3.1 Vector String *</label>
+            <label for="id_cvss_vector" class="form-label fw-semibold">CVSS:3.1 Vector String <span class="text-danger">*</span></label>
             {{ form.cvss_vector }}
             <div class="form-text small">
-              {{ form.fields.cvss_vector.help_text|safe }}
+              {{ form.fields.cvss_vector.help_text }}
             </div>
-            {% if form.cvss_vector.errors %}<div class="text-danger small">{{ form.cvss_vector.errors }}</div>{% endif %}
+            {% if form.cvss_vector.errors %}<div class="text-danger small mt-1">{{ form.cvss_vector.errors|striptags }}</div>{% endif %}
           </div>
 
           <div class="row g-3 mb-3">
             <div class="col-md-4">
               <label for="id_phase" class="form-label fw-semibold">Associated Phase</label>
               {{ form.phase }}
-              {% if form.phase.errors %}<div class="text-danger small">{{ form.phase.errors }}</div>{% endif %}
+              {% if form.phase.errors %}<div class="text-danger small mt-1">{{ form.phase.errors|striptags }}</div>{% endif %}
             </div>
             <div class="col-md-4">
-              <label for="id_assignee" class="form-label fw-semibold">Assignee</label>
+              <label for="id_assignee" class="form-label fw-semibold">Remediation Assignee</label>
               {{ form.assignee }}
-              {% if form.assignee.errors %}<div class="text-danger small">{{ form.assignee.errors }}</div>{% endif %}
+              {% if form.assignee.errors %}<div class="text-danger small mt-1">{{ form.assignee.errors|striptags }}</div>{% endif %}
             </div>
             <div class="col-md-4">
               <label for="id_due_date" class="form-label fw-semibold">Remediation Due Date</label>
               {{ form.due_date }}
-              {% if form.due_date.errors %}<div class="text-danger small">{{ form.due_date.errors }}</div>{% endif %}
+              {% if form.due_date.errors %}<div class="text-danger small mt-1">{{ form.due_date.errors|striptags }}</div>{% endif %}
             </div>
           </div>
 
           <div class="mb-4">
-            <label for="id_description" class="form-label fw-semibold">Detailed Description & PoC *</label>
+            <label for="id_description" class="form-label fw-semibold">Technical Description &amp; Reproduction Steps</label>
             {{ form.description }}
-            {% if form.description.errors %}<div class="text-danger small">{{ form.description.errors }}</div>{% endif %}
+            {% if form.description.errors %}<div class="text-danger small mt-1">{{ form.description.errors|striptags }}</div>{% endif %}
           </div>
 
-          <div class="d-flex justify-content-between">
+          <div class="d-flex justify-content-end gap-2 pt-2 border-top">
             <a href="{% url 'vulns:list' project_id=project.pk %}" class="btn btn-outline-secondary">Cancel</a>
-            <button type="submit" class="btn btn-danger">Log Vulnerability</button>
+            <button type="submit" class="btn btn-danger px-4">Log Vulnerability</button>
           </div>
         </form>
       </div>
@@ -90,4 +91,3 @@
   </div>
 </div>
 {% endblock %}
-
