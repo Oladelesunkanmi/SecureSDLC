@@ -1,57 +1,125 @@
 {% extends "base.html" %}
 {% block title %}Members – {{ project.name }} – SecureSDLC{% endblock %}
 {% block content %}
-<h1>Manage Members — {{ project.name }}</h1>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'projects:list' %}">Projects</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'projects:detail' pk=project.pk %}">{{ project.name }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Team Members</li>
+  </ol>
+</nav>
 
-<h3 class="mt-4">Current Members</h3>
-<table class="table">
-  <thead><tr><th>User</th><th>Project Role</th><th></th></tr></thead>
-  <tbody>
-    {% for m in members %}
-    <tr>
-      <td>{{ m.user.username }}</td>
-      <td>{{ m.get_project_role_display }}</td>
-      <td>
-        <form method="post" class="d-inline">
-          {% csrf_token %}
-          <input type="hidden" name="action" value="remove">
-          <input type="hidden" name="user_id" value="{{ m.user.pk }}">
-          <button type="submit" class="btn btn-sm btn-outline-danger"
-                  onclick="return confirm('Remove {{ m.user.username }}?')">Remove</button>
-        </form>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 mb-1 fw-bold">Manage Project Team</h1>
+    <p class="text-muted mb-0">{{ project.name }} &middot; Access controlled by project role assignment.</p>
+  </div>
+  <a href="{% url 'projects:detail' pk=project.pk %}" class="btn btn-outline-secondary btn-sm">
+    &larr; Back to Project
+  </a>
+</div>
 
-<h3 class="mt-4">Add Member</h3>
-<form method="post" novalidate>
-  {% csrf_token %}
-  <input type="hidden" name="action" value="add">
-  <div class="row g-2 align-items-end">
-    <div class="col-md-5">
-      <label for="id_user" class="form-label">User</label>
-      <select name="user" id="id_user" class="form-select">
-        {% for u in form.fields.user.queryset %}
-          <option value="{{ u.pk }}">{{ u.username }} ({{ u.get_role_display }})</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div class="col-md-4">
-      <label for="id_project_role" class="form-label">Project Role</label>
-      <select name="project_role" id="id_project_role" class="form-select">
-        {% for value, label in form.fields.project_role.choices %}
-          <option value="{{ value }}">{{ label }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div class="col-md-3">
-      <button type="submit" class="btn btn-primary">Add</button>
+<div class="row g-4">
+  <!-- Current Members List -->
+  <div class="col-lg-7">
+    <div class="card shadow-sm border-0 h-100">
+      <div class="card-header bg-white py-3 border-bottom">
+        <h2 class="h5 mb-0 fw-bold">Assigned Members ({{ members|length }})</h2>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Global Role</th>
+                <th>Project Role</th>
+                <th class="text-end pe-3">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for m in members %}
+                <tr>
+                  <td>
+                    <span class="fw-semibold">{{ m.user.username }}</span>
+                    {% if m.user == project.created_by %}
+                      <span class="badge bg-secondary-subtle text-secondary ms-1" style="font-size: 0.7rem;">Owner</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <span class="badge badge-role-{{ m.user.role|lower }} text-uppercase">
+                      {{ m.user.get_role_display }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle">
+                      {{ m.get_project_role_display }}
+                    </span>
+                  </td>
+                  <td class="text-end pe-3">
+                    <form method="post" class="d-inline">
+                      {% csrf_token %}
+                      <input type="hidden" name="action" value="remove">
+                      <input type="hidden" name="user_id" value="{{ m.user.pk }}">
+                      <button type="submit" class="btn btn-sm btn-outline-danger"
+                              onclick="return confirm('Remove {{ m.user.username }} from {{ project.name }}?')">
+                        Remove
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="4" class="text-center py-4 text-muted">No project members assigned.</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
-</form>
 
-<a href="{% url 'projects:detail' pk=project.pk %}" class="btn btn-secondary mt-3">Back to Project</a>
+  <!-- Add Member Form -->
+  <div class="col-lg-5">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-white py-3 border-bottom">
+        <h2 class="h5 mb-0 fw-bold">Add Team Member</h2>
+        <small class="text-muted">Grant project-scoped roles (PM, Developer, Pentester)</small>
+      </div>
+      <div class="card-body p-4">
+        <form method="post" novalidate>
+          {% csrf_token %}
+          <input type="hidden" name="action" value="add">
+          
+          <div class="mb-3">
+            <label for="id_user" class="form-label fw-semibold">Select User <span class="text-danger">*</span></label>
+            <select name="user" id="id_user" class="form-select" required>
+              <option value="">-- Choose User --</option>
+              {% for u in form.fields.user.queryset %}
+                <option value="{{ u.pk }}">{{ u.username }} ({{ u.get_role_display }})</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-4">
+            <label for="id_project_role" class="form-label fw-semibold">Assigned Project Role <span class="text-danger">*</span></label>
+            <select name="project_role" id="id_project_role" class="form-select" required>
+              {% for value, label in form.fields.project_role.choices %}
+                <option value="{{ value }}">{{ label }}</option>
+              {% endfor %}
+            </select>
+            <div class="form-text small mt-2">
+              <strong>Project Manager:</strong> Gate advancement and evidence approval.<br>
+              <strong>Developer:</strong> Checklist evidence submission &amp; vulnerability fixes.<br>
+              <strong>Pentester:</strong> Target registration, ZAP scanning, finding verification.
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100">Add Member to Project</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
-
