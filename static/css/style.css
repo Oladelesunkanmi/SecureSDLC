@@ -1,0 +1,341 @@
+/* ==========================================================================
+   SecureSDLC Design System Stylesheet
+   Modern Cyber-Defense Theme - Accessible WCAG AA Compliant
+   ========================================================================== */
+
+:root {
+  --sdlc-primary: #0f172a;       /* Slate 900 (Main Brand) */
+  --sdlc-primary-hover: #1e293b; /* Slate 800 */
+  --sdlc-accent: #2563eb;        /* Blue 600 */
+  --sdlc-accent-light: #eff6ff;  /* Blue 50 */
+  --sdlc-bg: #f8fafc;            /* Slate 50 */
+  --sdlc-card-bg: #ffffff;
+  --sdlc-border: #e2e8f0;        /* Slate 200 */
+  --sdlc-text: #0f172a;
+  --sdlc-text-muted: #64748b;    /* Slate 500 */
+
+  /* Severity Colors (High Contrast WCAG AA >= 4.5:1) */
+  --sev-crit-bg: #fee2e2;
+  --sev-crit-text: #991b1b;
+  --sev-crit-border: #f87171;
+
+  --sev-high-bg: #ffedd5;
+  --sev-high-text: #9a3412;
+  --sev-high-border: #fb923c;
+
+  --sev-med-bg: #fef9c3;
+  --sev-med-text: #854d0e;
+  --sev-med-border: #facc15;
+
+  --sev-low-bg: #dbeafe;
+  --sev-low-text: #1e40af;
+  --sev-low-border: #60a5fa;
+
+  --sev-info-bg: #f1f5f9;
+  --sev-info-text: #334155;
+  --sev-info-border: #94a3b8;
+
+  /* Status Colors */
+  --stat-open-bg: #fee2e2;
+  --stat-open-text: #991b1b;
+
+  --stat-fixed-bg: #e0e7ff;
+  --stat-fixed-text: #3730a3;
+
+  --stat-verified-bg: #dcfce7;
+  --stat-verified-text: #166534;
+
+  --stat-closed-bg: #f1f5f9;
+  --stat-closed-text: #334155;
+
+  /* Role Badges */
+  --role-admin-bg: #f3e8ff;
+  --role-admin-text: #6b21a8;
+
+  --role-pm-bg: #e0f2fe;
+  --role-pm-text: #0369a1;
+
+  --role-dev-bg: #ecfdf5;
+  --role-dev-text: #047857;
+
+  --role-pen-bg: #fffbeb;
+  --role-pen-text: #b45309;
+}
+
+body {
+  background-color: var(--sdlc-bg);
+  color: var(--sdlc-text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+/* --- Brand & Navigation Bar --- */
+.sdlc-navbar {
+  background-color: var(--sdlc-primary) !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.sdlc-brand {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  font-size: 1.25rem;
+  color: #ffffff !important;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sdlc-brand-badge {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: rgba(37, 99, 235, 0.3);
+  color: #93c5fd;
+  padding: 0.2rem 0.45rem;
+  border-radius: 0.25rem;
+  border: 1px solid rgba(147, 197, 253, 0.3);
+}
+
+.nav-link {
+  font-weight: 500;
+  color: #cbd5e1 !important;
+  transition: color 0.15s ease-in-out;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #ffffff !important;
+}
+
+/* --- Cards & Elevated Panels --- */
+.card {
+  border: 1px solid var(--sdlc-border);
+  border-radius: 0.5rem;
+  background-color: var(--sdlc-card-bg);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+}
+
+.card-header {
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--sdlc-border);
+  font-weight: 600;
+  padding: 0.875rem 1.25rem;
+}
+
+.card-header.bg-dark {
+  background-color: var(--sdlc-primary) !important;
+  color: #ffffff;
+}
+
+/* --- Severity Badges --- */
+.badge-crit {
+  background-color: var(--sev-crit-bg) !important;
+  color: var(--sev-crit-text) !important;
+  border: 1px solid var(--sev-crit-border);
+  font-weight: 600;
+}
+
+.badge-high {
+  background-color: var(--sev-high-bg) !important;
+  color: var(--sev-high-text) !important;
+  border: 1px solid var(--sev-high-border);
+  font-weight: 600;
+}
+
+.badge-med {
+  background-color: var(--sev-med-bg) !important;
+  color: var(--sev-med-text) !important;
+  border: 1px solid var(--sev-med-border);
+  font-weight: 600;
+}
+
+.badge-low {
+  background-color: var(--sev-low-bg) !important;
+  color: var(--sev-low-text) !important;
+  border: 1px solid var(--sev-low-border);
+  font-weight: 600;
+}
+
+.badge-info {
+  background-color: var(--sev-info-bg) !important;
+  color: var(--sev-info-text) !important;
+  border: 1px solid var(--sev-info-border);
+  font-weight: 600;
+}
+
+/* --- Status Badges --- */
+.badge-status-open {
+  background-color: var(--stat-open-bg) !important;
+  color: var(--stat-open-text) !important;
+  font-weight: 600;
+}
+
+.badge-status-fixed {
+  background-color: var(--stat-fixed-bg) !important;
+  color: var(--stat-fixed-text) !important;
+  font-weight: 600;
+}
+
+.badge-status-verified {
+  background-color: var(--stat-verified-bg) !important;
+  color: var(--stat-verified-text) !important;
+  font-weight: 600;
+}
+
+.badge-status-closed {
+  background-color: var(--stat-closed-bg) !important;
+  color: var(--stat-closed-text) !important;
+  font-weight: 600;
+}
+
+/* --- User Role Badges --- */
+.badge-role-admin {
+  background-color: var(--role-admin-bg) !important;
+  color: var(--role-admin-text) !important;
+  font-weight: 600;
+}
+
+.badge-role-pm {
+  background-color: var(--role-pm-bg) !important;
+  color: var(--role-pm-text) !important;
+  font-weight: 600;
+}
+
+.badge-role-developer {
+  background-color: var(--role-dev-bg) !important;
+  color: var(--role-dev-text) !important;
+  font-weight: 600;
+}
+
+.badge-role-pentester {
+  background-color: var(--role-pen-bg) !important;
+  color: var(--role-pen-text) !important;
+  font-weight: 600;
+}
+
+/* --- Phase Stepper / Pipeline --- */
+.phase-step {
+  display: flex;
+  align-items: center;
+  padding: 0.6rem 0.85rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--sdlc-text);
+  border: 1px solid var(--sdlc-border);
+  background-color: #ffffff;
+  transition: all 0.15s ease-in-out;
+}
+
+.phase-step:hover {
+  border-color: var(--sdlc-accent);
+  background-color: var(--sdlc-accent-light);
+  color: var(--sdlc-accent);
+}
+
+.phase-step.active {
+  border-color: var(--sdlc-accent);
+  background-color: var(--sdlc-accent);
+  color: #ffffff;
+}
+
+.phase-step.completed {
+  border-color: #bbf7d0;
+  background-color: #f0fdf4;
+  color: #166534;
+}
+
+/* --- Phase Gate Decision Callouts --- */
+.gate-banner-allowed {
+  background-color: #f0fdf4;
+  border: 1px solid #86efac;
+  border-left: 5px solid #22c55e;
+  border-radius: 0.375rem;
+  padding: 1rem 1.25rem;
+}
+
+.gate-banner-blocked {
+  background-color: #fff1f2;
+  border: 1px solid #fecdd3;
+  border-left: 5px solid #e11d48;
+  border-radius: 0.375rem;
+  padding: 1rem 1.25rem;
+}
+
+/* --- Tables & Data Grids --- */
+.table {
+  color: var(--sdlc-text);
+  vertical-align: middle;
+}
+
+.table th {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  color: var(--sdlc-text-muted);
+  background-color: #f8fafc;
+  border-bottom: 2px solid var(--sdlc-border);
+}
+
+.table td {
+  border-bottom: 1px solid var(--sdlc-border);
+  padding: 0.85rem 0.75rem;
+}
+
+/* --- Form Field Styling --- */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--sdlc-accent);
+  box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.15);
+}
+
+/* --- Breadcrumbs --- */
+.breadcrumb {
+  margin-bottom: 1.25rem;
+  font-size: 0.875rem;
+}
+
+.breadcrumb-item a {
+  text-decoration: none;
+  color: var(--sdlc-accent);
+}
+
+.breadcrumb-item a:hover {
+  text-decoration: underline;
+}
+
+/* --- Metric Summary Cards --- */
+.stat-card-value {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.stat-card-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--sdlc-text-muted);
+  font-weight: 600;
+}
+
+/* --- Footer --- */
+.sdlc-footer {
+  background-color: #ffffff;
+  border-top: 1px solid var(--sdlc-border);
+  padding: 1.25rem 0;
+  font-size: 0.825rem;
+  color: var(--sdlc-text-muted);
+  margin-top: 3rem;
+}
