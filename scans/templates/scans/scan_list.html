@@ -9,68 +9,77 @@
   </ol>
 </nav>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
   <div>
-    <h1 class="mb-0">Security Scans</h1>
-    <small class="text-muted">{{ project.name }}</small>
+    <div class="text-muted small mb-1">Automated DAST History &bull; {{ project.name }}</div>
+    <h1 class="h2 mb-0 fw-bold">Security Scans</h1>
   </div>
-  <div>
-    <a href="{% url 'scans:targets' project_id=project.pk %}" class="btn btn-outline-secondary me-2">Manage Targets</a>
+  <div class="d-flex gap-2">
+    <a href="{% url 'scans:targets' project_id=project.pk %}" class="btn btn-outline-secondary">
+      Manage Targets
+    </a>
     {% if can_scan %}
-      <a href="{% url 'scans:create' project_id=project.pk %}" class="btn btn-danger">Start ZAP Scan</a>
+      <a href="{% url 'scans:create' project_id=project.pk %}" class="btn btn-danger">
+        Start ZAP Scan &rarr;
+      </a>
     {% endif %}
   </div>
 </div>
 
-<div class="card shadow-sm">
+<div class="card shadow-sm mb-4">
+  <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+    <h5 class="mb-0 fs-6 fw-bold">Executed Scan Tasks</h5>
+    <span class="badge bg-secondary">{{ scans|length }} total</span>
+  </div>
   <div class="card-body p-0">
     <div class="table-responsive">
       <table class="table table-hover align-middle mb-0">
-        <thead class="table-dark">
+        <thead>
           <tr>
-            <th>Scan #</th>
-            <th>Tool</th>
-            <th>Target URL</th>
-            <th>Status</th>
-            <th>Started</th>
-            <th>Finished</th>
-            <th>Requested By</th>
-            <th>Action</th>
+            <th scope="col">Scan #</th>
+            <th scope="col">Tool</th>
+            <th scope="col">Target URL</th>
+            <th scope="col">Status</th>
+            <th scope="col">Started</th>
+            <th scope="col">Finished</th>
+            <th scope="col">Requested By</th>
+            <th scope="col" class="text-end">Action</th>
           </tr>
         </thead>
         <tbody>
           {% for s in scans %}
           <tr>
             <td><strong>#{{ s.id }}</strong></td>
-            <td><span class="badge bg-secondary">{{ s.tool }}</span></td>
-            <td><code>{{ s.target.url }}</code></td>
+            <td><span class="badge bg-light text-dark border">{{ s.tool }}</span></td>
+            <td><code class="fw-bold">{{ s.target.url }}</code></td>
             <td>
               {% if s.status == "DONE" %}
-                <span class="badge bg-success">Completed</span>
+                <span class="badge badge-status-verified">Completed</span>
               {% elif s.status == "RUNNING" %}
-                <span class="badge bg-primary">
+                <span class="badge bg-primary text-white">
                   <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
                   Running
                 </span>
               {% elif s.status == "QUEUED" %}
-                <span class="badge bg-warning text-dark">Queued</span>
+                <span class="badge badge-med">Queued</span>
               {% else %}
-                <span class="badge bg-danger">Failed</span>
+                <span class="badge badge-crit">Failed</span>
               {% endif %}
             </td>
             <td>{{ s.started_at|date:"d M H:i:s"|default:"—" }}</td>
             <td>{{ s.finished_at|date:"d M H:i:s"|default:"—" }}</td>
             <td><small class="text-muted">{{ s.requested_by.username|default:"System" }}</small></td>
-            <td>
+            <td class="text-end">
               <a href="{% url 'scans:detail' project_id=project.pk sid=s.pk %}" class="btn btn-sm btn-outline-primary">
-                View Results
+                View Results &rarr;
               </a>
             </td>
           </tr>
           {% empty %}
           <tr>
-            <td colspan="8" class="text-center py-4 text-muted">
-              No scans executed yet. Click "Start ZAP Scan" to run a security scan against an authorized target.
+            <td colspan="8" class="text-center py-5 text-muted">
+              <div class="mb-2 fs-5">No scans executed yet</div>
+              <p class="small mb-0">Run a security scan against an authorized target to identify vulnerabilities automatically.</p>
             </td>
           </tr>
           {% endfor %}
@@ -79,5 +88,10 @@
     </div>
   </div>
 </div>
-{% endblock %}
 
+<div>
+  <a href="{% url 'projects:detail' pk=project.pk %}" class="btn btn-outline-secondary">
+    &larr; Back to Project
+  </a>
+</div>
+{% endblock %}

@@ -10,43 +10,52 @@
   </ol>
 </nav>
 
+<!-- Header Card -->
 <div class="card mb-4 shadow-sm">
   <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-    <h5 class="mb-0 fs-6">{{ scan.tool }} Scan #{{ scan.id }}</h5>
+    <h5 class="mb-0 fs-6 fw-bold">{{ scan.tool }} Scan #{{ scan.id }}</h5>
     <span id="scan-status-badge">
       {% if scan.status == "DONE" %}
-        <span class="badge bg-success fs-6">Completed</span>
+        <span class="badge badge-status-verified fs-6">Completed</span>
       {% elif scan.status == "RUNNING" %}
-        <span class="badge bg-primary fs-6">
+        <span class="badge bg-primary text-white fs-6">
           <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
           Running...
         </span>
       {% elif scan.status == "QUEUED" %}
-        <span class="badge bg-warning text-dark fs-6">Queued...</span>
+        <span class="badge badge-med fs-6">Queued...</span>
       {% else %}
-        <span class="badge bg-danger fs-6">Failed</span>
+        <span class="badge badge-crit fs-6">Failed</span>
       {% endif %}
     </span>
   </div>
   <div class="card-body">
     <div class="row g-3">
-      <div class="col-md-6">
-        <div class="small text-muted">Target URL</div>
-        <code>{{ scan.target.url }}</code> ({{ scan.target.get_environment_display }})
+      <div class="col-md-5">
+        <div class="stat-card-label">Target URL</div>
+        <div class="mt-1">
+          <code class="fw-bold fs-6">{{ scan.target.url }}</code>
+          <span class="badge bg-light text-dark border ms-1">{{ scan.target.get_environment_display }}</span>
+        </div>
       </div>
       <div class="col-md-3">
-        <div class="small text-muted">Requested By</div>
-        <strong>{{ scan.requested_by.username|default:"System" }}</strong>
+        <div class="stat-card-label">Requested By</div>
+        <div class="mt-1 fw-semibold">{{ scan.requested_by.username|default:"System" }}</div>
       </div>
-      <div class="col-md-3">
-        <div class="small text-muted">Started At</div>
-        <span>{{ scan.started_at|date:"d M Y H:i:s"|default:"Not started" }}</span>
+      <div class="col-md-4">
+        <div class="stat-card-label">Scan Timeline</div>
+        <div class="mt-1 small">
+          Started: <strong>{{ scan.started_at|date:"d M Y H:i:s"|default:"Not started" }}</strong>
+          {% if scan.finished_at %}
+            <br>Finished: <strong>{{ scan.finished_at|date:"d M Y H:i:s" }}</strong>
+          {% endif %}
+        </div>
       </div>
     </div>
 
     {% if scan.error_message %}
       <div class="alert alert-danger mt-3 mb-0">
-        <strong>Scan Error:</strong> {{ scan.error_message }}
+        <strong>Scan Failure Details:</strong> {{ scan.error_message }}
       </div>
     {% endif %}
 
@@ -54,7 +63,7 @@
       <div class="alert alert-info mt-3 mb-0 d-flex align-items-center">
         <div class="spinner-border spinner-border-sm me-2" role="status"></div>
         <div>
-          Scan in progress. This page updates automatically when the background worker completes.
+          Scan is currently executing in the background. This page polls every 3 seconds and will automatically reload upon completion.
         </div>
       </div>
     {% endif %}
@@ -63,53 +72,61 @@
 
 <!-- Imported Findings -->
 <div class="card shadow-sm mb-4">
-  <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
-    <h5 class="mb-0 fs-6">Imported Security Findings ({{ imported_vulns.count }})</h5>
+  <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+    <h5 class="mb-0 fs-6 fw-bold">Imported Security Findings</h5>
+    <span class="badge bg-secondary">{{ imported_vulns.count }} findings</span>
   </div>
   <div class="card-body p-0">
     <div class="table-responsive">
       <table class="table table-hover align-middle mb-0">
-        <thead class="table-light">
+        <thead>
           <tr>
-            <th>Severity</th>
-            <th>Title</th>
-            <th>CVSS</th>
-            <th>Component</th>
-            <th>Status</th>
-            <th>Action</th>
+            <th scope="col" style="width: 110px;">Severity</th>
+            <th scope="col">Title</th>
+            <th scope="col" style="width: 90px;">CVSS</th>
+            <th scope="col">Affected Component</th>
+            <th scope="col" style="width: 120px;">Status</th>
+            <th scope="col" class="text-end" style="width: 140px;">Action</th>
           </tr>
         </thead>
         <tbody>
           {% for v in imported_vulns %}
           <tr>
             <td>
-              <span class="badge bg-{% if v.severity == 'CRITICAL' %}danger{% elif v.severity == 'HIGH' %}warning text-dark{% elif v.severity == 'MEDIUM' %}info text-dark{% elif v.severity == 'LOW' %}secondary{% else %}light text-dark border{% endif %}">
+              <span class="badge {% if v.severity == 'CRITICAL' %}badge-crit{% elif v.severity == 'HIGH' %}badge-high{% elif v.severity == 'MEDIUM' %}badge-med{% elif v.severity == 'LOW' %}badge-low{% else %}badge-info{% endif %}">
                 {{ v.severity }}
               </span>
             </td>
-            <td><strong>{{ v.title }}</strong></td>
-            <td><code>{{ v.cvss_score }}</code></td>
-            <td><code class="small">{{ v.affected_component|truncatechars:40 }}</code></td>
             <td>
-              <span class="badge bg-{% if v.status == 'OPEN' %}danger{% elif v.status == 'FIXED' %}primary{% elif v.status == 'VERIFIED' %}success{% else %}dark{% endif %}">
+              <a href="{% url 'vulns:detail' project_id=project.pk vid=v.pk %}" class="fw-semibold text-decoration-none">
+                {{ v.title }}
+              </a>
+            </td>
+            <td><code class="fw-bold">{{ v.cvss_score }}</code></td>
+            <td><code class="small text-break">{{ v.affected_component|truncatechars:45 }}</code></td>
+            <td>
+              <span class="badge {% if v.status == 'OPEN' %}badge-status-open{% elif v.status == 'FIXED' %}badge-status-fixed{% elif v.status == 'VERIFIED' %}badge-status-verified{% else %}badge-status-closed{% endif %}">
                 {{ v.get_status_display }}
               </span>
             </td>
-            <td>
+            <td class="text-end">
               <a href="{% url 'vulns:detail' project_id=project.pk vid=v.pk %}" class="btn btn-sm btn-outline-primary">
-                View Finding
+                View &rarr;
               </a>
             </td>
           </tr>
           {% empty %}
           <tr>
-            <td colspan="6" class="text-center py-4 text-muted">
+            <td colspan="6" class="text-center py-5 text-muted">
               {% if scan.status == "DONE" %}
-                No vulnerabilities were identified by the scanner.
+                <div class="mb-1 fs-6">No vulnerabilities were identified by the scanner.</div>
+                <small>The scan finished with clean results.</small>
               {% elif scan.status == "FAILED" %}
-                No findings imported due to scan failure.
+                <div class="mb-1 fs-6 text-danger">No findings imported due to scan failure.</div>
+                <small>Check the error details above.</small>
               {% else %}
-                Findings will appear here once the scan completes.
+                <div class="mb-1 fs-6">Scan is in progress...</div>
+                <small>Findings will be imported automatically when completed.</small>
               {% endif %}
             </td>
           </tr>
@@ -120,7 +137,11 @@
   </div>
 </div>
 
-<a href="{% url 'scans:list' project_id=project.pk %}" class="btn btn-secondary mb-4">Back to Scans</a>
+<div class="mb-4">
+  <a href="{% url 'scans:list' project_id=project.pk %}" class="btn btn-outline-secondary">
+    &larr; Back to Scans
+  </a>
+</div>
 
 <!-- Status Polling Script -->
 {% if scan.status == "QUEUED" or scan.status == "RUNNING" %}
@@ -144,4 +165,3 @@
 </script>
 {% endif %}
 {% endblock %}
-
