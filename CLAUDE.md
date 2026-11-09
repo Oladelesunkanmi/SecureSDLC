@@ -58,7 +58,7 @@ Four roles, stored as a `role` field on a custom `User` model.
 
 Enforcement rules:
 - Every project view checks membership. A user who is not a member gets a 404, not a 403, so project existence is not revealed.
-- Permission checks live in `accounts/permissions.py` as functions (`can_advance_phase(user, project)`, `can_transition(user, vuln, new_status)`, and so on). Views call these functions. Templates use them only to hide buttons, never as the only protection.
+- Permission checks live in `accounts/permissions.py` as functions (`can_advance_phase(user, project)`, `can_create_vuln(user, project)`, `can_register_target(user, project)`, `can_trigger_scan(user, project)`, `can_generate_report(user, project)`, and so on), while vulnerability status transition authorization (`can_transition(user, vuln, new_status)`) lives in `vulns/services.py` alongside `transition()` and the status workflow rules (§5.3). Views call these functions. Templates use them only to hide buttons, never as the only protection.
 - Admin is a Django superuser-equivalent for the app, but it must still pass through the same checks.
 
 ---
