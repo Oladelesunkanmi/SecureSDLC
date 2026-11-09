@@ -8,78 +8,84 @@
   </ol>
 </nav>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
   <div>
-    <h1 class="mb-0">Global Security Risk Dashboard</h1>
-    <small class="text-muted">Enterprise cross-project posture analysis and risk rankings (Admin View)</small>
+    <div class="text-muted small mb-1">Portfolio Risk Management &bull; Admin Console</div>
+    <h1 class="h2 mb-0 fw-bold">Global Security Risk Dashboard</h1>
   </div>
   <div>
-    <a href="{% url 'projects:list' %}" class="btn btn-outline-secondary">Project List</a>
+    <a href="{% url 'projects:list' %}" class="btn btn-outline-secondary">
+      View All Projects
+    </a>
   </div>
 </div>
 
-<div class="card shadow-sm">
-  <div class="card-header bg-dark text-white">
-    <h5 class="mb-0 fs-6">Projects Ranked by Security Risk</h5>
+<div class="card shadow-sm mb-4">
+  <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+    <h5 class="mb-0 fs-6 fw-bold">Projects Ranked by Security Risk</h5>
+    <span class="badge bg-secondary">{{ projects_data|length }} projects</span>
   </div>
   <div class="card-body p-0">
     <div class="table-responsive">
       <table class="table table-hover align-middle mb-0">
-        <thead class="table-light">
+        <thead>
           <tr>
-            <th>Rank</th>
-            <th>Project</th>
-            <th>SDLC Model</th>
-            <th>Current Phase</th>
-            <th>Total Findings</th>
-            <th>Open Crit / High</th>
-            <th style="width: 200px;">Risk Score (0–100)</th>
-            <th>Action</th>
+            <th scope="col" style="width: 70px;">Rank</th>
+            <th scope="col">Project</th>
+            <th scope="col">SDLC Model</th>
+            <th scope="col">Current Phase</th>
+            <th scope="col" class="text-center" style="width: 130px;">Total Findings</th>
+            <th scope="col" class="text-center" style="width: 140px;">Gate-Blocking</th>
+            <th scope="col" style="width: 220px;">Risk Score (0–100)</th>
+            <th scope="col" class="text-end" style="width: 140px;">Action</th>
           </tr>
         </thead>
         <tbody>
           {% for item in projects_data %}
           <tr>
-            <td><strong>#{{ forloop.counter }}</strong></td>
+            <td><strong class="text-muted">#{{ forloop.counter }}</strong></td>
             <td>
-              <a href="{% url 'dashboard:project' project_id=item.project.pk %}" class="fw-semibold text-decoration-none">
+              <a href="{% url 'dashboard:project' project_id=item.project.pk %}" class="fw-bold text-decoration-none text-dark">
                 {{ item.project.name }}
               </a>
             </td>
-            <td><span class="badge bg-secondary">{{ item.project.get_sdlc_model_display }}</span></td>
+            <td><span class="badge bg-light text-dark border">{{ item.project.get_sdlc_model_display }}</span></td>
             <td>
-              {{ item.project.current_phase.get_kind_display|default:"Completed" }}
+              <span class="badge bg-primary text-white">
+                {{ item.project.current_phase.get_kind_display|default:"Completed" }}
+              </span>
             </td>
-            <td>{{ item.total_vulns }}</td>
-            <td>
+            <td class="text-center fw-semibold">{{ item.total_vulns }}</td>
+            <td class="text-center">
               {% if item.open_blocking > 0 %}
-                <span class="badge bg-danger">{{ item.open_blocking }}</span>
+                <span class="badge badge-crit">{{ item.open_blocking }}</span>
               {% else %}
-                <span class="text-muted">0</span>
+                <span class="badge badge-status-verified">0</span>
               {% endif %}
             </td>
             <td>
               <div class="d-flex align-items-center">
-                <span class="fw-bold me-2 text-{% if item.risk_score > 50 %}danger{% elif item.risk_score > 20 %}warning{% else %}success{% endif %}">
+                <span class="fw-bold me-2 {% if item.risk_score > 50 %}text-danger{% elif item.risk_score > 20 %}text-warning{% else %}text-success{% endif %}">
                   {{ item.risk_score }}
                 </span>
                 <div class="progress flex-grow-1" style="height: 8px;">
-                  <div class="progress-bar bg-{% if item.risk_score > 50 %}danger{% elif item.risk_score > 20 %}warning{% else %}success{% endif %}"
+                  <div class="progress-bar {% if item.risk_score > 50 %}bg-danger{% elif item.risk_score > 20 %}bg-warning{% else %}bg-success{% endif %}"
                        role="progressbar"
                        style="width: {{ item.risk_score }}%;"></div>
                 </div>
               </div>
             </td>
-            <td>
+            <td class="text-end">
               <a href="{% url 'dashboard:project' project_id=item.project.pk %}" class="btn btn-sm btn-outline-primary">
-                View Metrics
+                View Metrics &rarr;
               </a>
             </td>
           </tr>
           {% empty %}
           <tr>
-            <td colspan="8" class="text-center py-4 text-muted">
-              No projects registered in the system.
+            <td colspan="8" class="text-center py-5 text-muted">
+              <div class="mb-1 fs-5">No projects registered yet</div>
+              <small>Create projects to see aggregated enterprise security risk rankings.</small>
             </td>
           </tr>
           {% endfor %}
@@ -89,4 +95,3 @@
   </div>
 </div>
 {% endblock %}
-
