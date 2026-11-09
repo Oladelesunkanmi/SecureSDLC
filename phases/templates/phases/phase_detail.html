@@ -1,167 +1,231 @@
 {% extends "base.html" %}
-{% block title %}{{ phase.get_kind_display }} – {{ project.name }} – SecureSDLC{% endblock %}
+{% block title %}{{ phase.get_kind_display }} Gate – {{ project.name }} – SecureSDLC{% endblock %}
 {% block content %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url 'projects:list' %}">Projects</a></li>
     <li class="breadcrumb-item"><a href="{% url 'projects:detail' pk=project.pk %}">{{ project.name }}</a></li>
-    <li class="breadcrumb-item active" aria-current="page">{{ phase.get_kind_display }}</li>
+    <li class="breadcrumb-item active" aria-current="page">Phase {{ phase.order }}: {{ phase.get_kind_display }}</li>
   </ol>
 </nav>
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <div>
-    <h1 class="mb-0">Phase {{ phase.order }}: {{ phase.get_kind_display }}</h1>
-    <small class="text-muted">SDLC Model: {{ project.get_sdlc_model_display }}</small>
-  </div>
-  <div>
-    {% if phase.status == "COMPLETED" %}
-      <span class="badge bg-success fs-6">Completed</span>
-    {% elif phase.status == "IN_PROGRESS" %}
-      <span class="badge bg-primary fs-6">In Progress</span>
-    {% else %}
-      <span class="badge bg-secondary fs-6">Not Started</span>
-    {% endif %}
-  </div>
-</div>
+<!-- Phase Header Bar -->
+<div class="card shadow-sm border-0 mb-4">
+  <div class="card-body p-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+      <div>
+        <div class="d-flex align-items-center gap-2 mb-1">
+          <span class="badge bg-secondary-subtle text-secondary-emphasis border">Phase {{ phase.order }} of 6</span>
+          <h1 class="h3 mb-0 fw-bold">{{ phase.get_kind_display }}</h1>
+        </div>
+        <p class="text-muted small mb-0">
+          {{ project.name }} &middot; Model: <span class="fw-semibold text-dark">{{ project.get_sdlc_model_display }}</span>
+        </p>
+      </div>
 
-<!-- Phase Gate Status Card -->
-<div class="card mb-4 border-{% if gate_result.allowed %}success{% else %}warning{% endif %}">
-  <div class="card-header bg-{% if gate_result.allowed %}success text-white{% else %}warning text-dark{% endif %} d-flex justify-content-between align-items-center">
-    <strong>Phase Gate Check</strong>
-    <span>{% if gate_result.allowed %}PASSED{% else %}BLOCKED{% endif %}</span>
-  </div>
-  <div class="card-body">
-    {% if gate_result.allowed %}
-      <p class="card-text text-success mb-2">
-        <strong>All phase gate checks passed.</strong> All required checklist items have verified evidence and no blocking vulnerabilities exist.
-      </p>
-    {% else %}
-      <p class="card-text text-danger mb-2">
-        <strong>Advancement is currently blocked:</strong>
-      </p>
-      <ul class="mb-2">
-        {% for reason in gate_result.reasons %}
-          <li class="text-danger">{{ reason }}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-
-    <div class="mt-3">
-      {% if advance_allowed and phase.status != "COMPLETED" %}
-        <form method="post" action="{% url 'phases:advance' project_id=project.pk kind=phase.kind|lower %}" class="d-inline">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-success" {% if not gate_result.allowed %}disabled title="Resolve blockers first"{% endif %}>
-            Advance Phase Through Gate
-          </button>
-        </form>
-      {% endif %}
-
-      {% if can_reopen and phase.status == "COMPLETED" %}
-        <form method="post" action="{% url 'phases:reopen' project_id=project.pk kind=phase.kind|lower %}" class="d-inline ms-2">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-outline-warning" onclick="return confirm('Reopen this phase for a new Agile iteration?')">
-            Reopen Phase (Agile)
-          </button>
-        </form>
-      {% endif %}
+      <div class="d-flex align-items-center gap-2">
+        {% if phase.status == "COMPLETED" %}
+          <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 fs-6">
+            Completed
+          </span>
+        {% elif phase.status == "IN_PROGRESS" %}
+          <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 fs-6">
+            In Progress
+          </span>
+        {% else %}
+          <span class="badge bg-secondary-subtle text-secondary-emphasis border px-3 py-2 fs-6">
+            Not Started
+          </span>
+        {% endif %}
+      </div>
     </div>
   </div>
 </div>
 
+<!-- Phase Gate Status Banner (Primary Control) -->
+<div class="mb-4">
+  {% if gate_result.allowed %}
+    <div class="gate-banner-allowed shadow-sm">
+      <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
+        <div>
+          <div class="d-flex align-items-center gap-2 mb-1">
+            <span class="badge bg-success text-white px-2 py-1">GATE OPEN</span>
+            <h2 class="h5 mb-0 fw-bold text-success">All Security Gate Criteria Satisfied</h2>
+          </div>
+          <p class="mb-0 text-success-emphasis small">
+            Every required security check is documented with verified evidence, and no open or unverified Critical or High vulnerabilities remain in this phase.
+          </p>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 flex-shrink-0">
+          {% if advance_allowed and phase.status != "COMPLETED" %}
+            <form method="post" action="{% url 'phases:advance' project_id=project.pk kind=phase.kind|lower %}" class="d-inline">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-success px-4 shadow-sm fw-semibold">
+                Advance Phase Through Gate &rarr;
+              </button>
+            </form>
+          {% elif phase.status == "COMPLETED" %}
+            <span class="badge bg-success text-white py-2 px-3">Phase Gate Passed &amp; Closed</span>
+          {% endif %}
+
+          {% if can_reopen and phase.status == "COMPLETED" %}
+            <form method="post" action="{% url 'phases:reopen' project_id=project.pk kind=phase.kind|lower %}" class="d-inline">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-warning" onclick="return confirm('Reopen this phase for a new Agile iteration?')">
+                Reopen Phase (Agile)
+              </button>
+            </form>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="gate-banner-blocked shadow-sm">
+      <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-start gap-3">
+        <div class="flex-grow-1">
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <span class="badge bg-danger text-white px-2 py-1">GATE BLOCKED</span>
+            <h2 class="h5 mb-0 fw-bold text-danger">Phase Gate Advancement Restricted</h2>
+          </div>
+          <p class="text-danger-emphasis small mb-2">
+            The project cannot advance past {{ phase.get_kind_display }} until all mandatory security requirements below are met:
+          </p>
+          <ul class="mb-0 ps-3 small text-danger">
+            {% for reason in gate_result.reasons %}
+              <li class="fw-semibold">{{ reason }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div class="flex-shrink-0 pt-2 pt-lg-0">
+          {% if advance_allowed and phase.status != "COMPLETED" %}
+            <button type="button" class="btn btn-secondary px-3" disabled title="Resolve blockers to unlock advancement">
+              Advance Blocked
+            </button>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+
 <!-- Security Checklist -->
-<div class="card mb-4">
-  <div class="card-header bg-dark text-white">
-    <h4 class="mb-0 fs-5">Security Checklist</h4>
+<div class="card shadow-sm border-0 mb-4">
+  <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+    <div>
+      <h2 class="h5 mb-0 fw-bold">Phase Security Checklist</h2>
+      <small class="text-muted">Complete required items with non-empty evidence to satisfy the gate</small>
+    </div>
+    <span class="badge bg-secondary-subtle text-secondary border">
+      {{ checklist|length }} Total Items
+    </span>
   </div>
   <div class="card-body p-0">
     <div class="table-responsive">
       <table class="table table-hover align-middle mb-0">
-        <thead class="table-light">
+        <thead>
           <tr>
-            <th style="width: 100px;">Code</th>
-            <th>Requirement</th>
-            <th>OWASP Ref</th>
-            <th>Status</th>
-            <th>Evidence</th>
-            <th style="width: 120px;">Action</th>
+            <th style="width: 110px;">Item Code</th>
+            <th>Security Requirement &amp; Guidance</th>
+            <th style="width: 140px;">OWASP Ref</th>
+            <th style="width: 120px;">Status</th>
+            <th>Submitted Evidence</th>
+            <th style="width: 100px;" class="text-end pe-3">Action</th>
           </tr>
         </thead>
         <tbody>
           {% for entry in checklist %}
-          <tr>
-            <td>
-              <code>{{ entry.item.code }}</code>
-              {% if entry.item.required %}
-                <span class="badge bg-danger ms-1" title="Required to advance phase">Req</span>
-              {% else %}
-                <span class="badge bg-secondary ms-1">Opt</span>
-              {% endif %}
-            </td>
-            <td>
-              <div class="fw-semibold">{{ entry.item.text }}</div>
-              {% if entry.item.guidance %}
-                <small class="text-muted">{{ entry.item.guidance }}</small>
-              {% endif %}
-            </td>
-            <td>
-              {% if entry.item.owasp_ref %}
-                <span class="badge bg-info text-dark">{{ entry.item.owasp_ref }}</span>
-              {% else %}
-                <span class="text-muted">—</span>
-              {% endif %}
-            </td>
-            <td>
-              {% if entry.response and entry.response.done %}
-                <span class="badge bg-success">Done</span>
-                {% if entry.response.completed_by %}
-                  <div class="small text-muted">{{ entry.response.completed_by.username }} ({{ entry.response.completed_at|date:"d M H:i" }})</div>
+            <tr>
+              <td>
+                <span class="font-monospace fw-bold">{{ entry.item.code }}</span>
+                {% if entry.item.required %}
+                  <span class="badge bg-danger ms-1" title="Required to advance phase">Req</span>
+                {% else %}
+                  <span class="badge bg-secondary ms-1">Opt</span>
                 {% endif %}
-              {% else %}
-                <span class="badge bg-secondary">Pending</span>
-              {% endif %}
-            </td>
-            <td>
-              {% if entry.response and entry.response.evidence %}
-                <div class="text-break" style="max-width: 320px; max-height: 80px; overflow-y: auto;">
-                  {{ entry.response.evidence }}
-                </div>
-              {% else %}
-                <em class="text-muted small">No evidence submitted</em>
-              {% endif %}
-            </td>
-            <td>
-              <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#edit-{{ entry.item.id }}">
-                Edit
-              </button>
-            </td>
-          </tr>
-          <!-- Collapsible Edit Form -->
-          <tr class="collapse bg-light" id="edit-{{ entry.item.id }}">
-            <td colspan="6" class="p-3">
-              <form method="post" action="{% url 'phases:detail' project_id=project.pk kind=phase.kind|lower %}">
-                {% csrf_token %}
-                <input type="hidden" name="item_id" value="{{ entry.item.id }}">
-                <div class="row g-3">
-                  <div class="col-md-9">
-                    <label class="form-label fw-semibold">Evidence / Notes (Required if marking Done)</label>
-                    <textarea name="evidence" class="form-control" rows="2" placeholder="Describe implementation, test results, links, or verification evidence...">{{ entry.response.evidence|default_if_none:'' }}</textarea>
+              </td>
+              <td>
+                <div class="fw-bold text-dark">{{ entry.item.text }}</div>
+                {% if entry.item.guidance %}
+                  <div class="text-muted small mt-1">{{ entry.item.guidance }}</div>
+                {% endif %}
+              </td>
+              <td>
+                {% if entry.item.owasp_ref %}
+                  <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle">
+                    {{ entry.item.owasp_ref }}
+                  </span>
+                {% else %}
+                  <span class="text-muted">—</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if entry.response and entry.response.done %}
+                  <span class="badge bg-success-subtle text-success border border-success-subtle">
+                    Done
+                  </span>
+                  {% if entry.response.completed_by %}
+                    <small class="text-muted d-block mt-1" style="font-size: 0.72rem;">
+                      {{ entry.response.completed_by.username }}<br>{{ entry.response.completed_at|date:"d M H:i" }}
+                    </small>
+                  {% endif %}
+                {% else %}
+                  <span class="badge bg-secondary-subtle text-secondary border">
+                    Pending
+                  </span>
+                {% endif %}
+              </td>
+              <td>
+                {% if entry.response and entry.response.evidence %}
+                  <div class="small text-dark p-2 bg-light rounded border text-break" style="max-height: 80px; overflow-y: auto;">
+                    {{ entry.response.evidence }}
                   </div>
-                  <div class="col-md-3 d-flex flex-column justify-content-between">
-                    <div class="form-check mt-4">
-                      <input class="form-check-input" type="checkbox" name="done" value="1" id="done-{{ entry.item.id }}" {% if entry.response and entry.response.done %}checked{% endif %}>
-                      <label class="form-check-label fw-semibold" for="done-{{ entry.item.id }}">
-                        Mark as Completed
-                      </label>
-                    </div>
-                    <div>
-                      <button type="submit" class="btn btn-sm btn-primary">Save Response</button>
+                {% else %}
+                  <span class="text-muted small italic">No evidence provided</span>
+                {% endif %}
+              </td>
+              <td class="text-end pe-3">
+                <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#edit-{{ entry.item.id }}" aria-expanded="false" aria-controls="edit-{{ entry.item.id }}">
+                  Edit
+                </button>
+              </td>
+            </tr>
+
+            <!-- Inline Evidence Edit Form -->
+            <tr class="collapse bg-light" id="edit-{{ entry.item.id }}">
+              <td colspan="6" class="p-4 border-bottom">
+                <form method="post" action="{% url 'phases:detail' project_id=project.pk kind=phase.kind|lower %}" novalidate>
+                  {% csrf_token %}
+                  <input type="hidden" name="item_id" value="{{ entry.item.id }}">
+                  
+                  <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                      <h3 class="h6 fw-bold mb-2">Update Response for [{{ entry.item.code }}] {{ entry.item.text }}</h3>
+                      
+                      <div class="mb-3">
+                        <label for="evidence-{{ entry.item.id }}" class="form-label fw-semibold small">
+                          Verification Evidence / Technical Notes <span class="text-danger">*</span>
+                        </label>
+                        <textarea id="evidence-{{ entry.item.id }}" name="evidence" class="form-control" rows="2" 
+                                  placeholder="Document verification results, test tool output, architectural notes, or reference documents...">{{ entry.response.evidence|default_if_none:'' }}</textarea>
+                        <div class="form-text small">Evidence is strictly mandatory before an item can be marked completed.</div>
+                      </div>
+
+                      <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" name="done" value="1" id="done-{{ entry.item.id }}" {% if entry.response and entry.response.done %}checked{% endif %}>
+                          <label class="form-check-label fw-semibold" for="done-{{ entry.item.id }}">
+                            Mark this security control as Done
+                          </label>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-primary px-3">Save Response</button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </form>
-            </td>
-          </tr>
+                </form>
+              </td>
+            </tr>
           {% endfor %}
         </tbody>
       </table>
@@ -169,64 +233,72 @@
   </div>
 </div>
 
-<!-- Linked Vulnerabilities & Audit Log Row -->
-<div class="row">
-  <div class="col-md-6 mb-4">
-    <div class="card h-100">
-      <div class="card-header bg-dark text-white">
-        <h5 class="mb-0 fs-6">Phase Vulnerabilities</h5>
+<!-- Linked Vulnerabilities & Audit Trail -->
+<div class="row g-4 mb-4">
+  <!-- Phase Vulnerabilities -->
+  <div class="col-lg-6">
+    <div class="card shadow-sm border-0 h-100">
+      <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+        <h2 class="h5 mb-0 fw-bold">Phase Defect Registry</h2>
+        <span class="badge bg-secondary-subtle text-secondary border">{{ phase_vulns|length }} Logged</span>
       </div>
       <div class="card-body p-0">
         <ul class="list-group list-group-flush">
           {% for vuln in phase_vulns %}
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div>
-              <strong>{{ vuln.title }}</strong>
-              <div class="small text-muted">{{ vuln.affected_component }}</div>
-            </div>
-            <div class="text-end">
-              <span class="badge bg-{% if vuln.severity == 'CRITICAL' %}danger{% elif vuln.severity == 'HIGH' %}warning text-dark{% else %}secondary{% endif %}">
-                {{ vuln.severity }}
-              </span>
-              <span class="badge bg-outline-dark">{{ vuln.get_status_display }}</span>
-            </div>
-          </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+              <div>
+                <a href="{% url 'vulns:detail' project_id=project.pk vid=vuln.pk %}" class="fw-bold text-decoration-none text-dark">
+                  {{ vuln.title }}
+                </a>
+                <small class="text-muted d-block">{{ vuln.affected_component }}</small>
+              </div>
+              <div class="text-end">
+                <span class="badge badge-{{ vuln.severity|lower|slice:':4' }}">
+                  {{ vuln.severity }}
+                </span>
+                <span class="badge badge-status-{{ vuln.status|lower }} ms-1">
+                  {{ vuln.get_status_display }}
+                </span>
+              </div>
+            </li>
           {% empty %}
-          <li class="list-group-item text-muted">No vulnerabilities logged for this phase.</li>
+            <li class="list-group-item text-center text-muted py-4">No vulnerabilities recorded for this phase.</li>
           {% endfor %}
         </ul>
       </div>
     </div>
   </div>
 
-  <div class="col-md-6 mb-4">
-    <div class="card h-100">
-      <div class="card-header bg-dark text-white">
-        <h5 class="mb-0 fs-6">Gate Audit Log</h5>
+  <!-- Gate Audit Log -->
+  <div class="col-lg-6">
+    <div class="card shadow-sm border-0 h-100">
+      <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+        <h2 class="h5 mb-0 fw-bold">Gate Decision Audit Log</h2>
+        <small class="text-muted">Immutable decision history</small>
       </div>
       <div class="card-body p-0">
         <ul class="list-group list-group-flush">
           {% for dec in recent_decisions %}
-          <li class="list-group-item">
-            <div class="d-flex justify-content-between">
-              <strong>{{ dec.get_action_display }}</strong>
-              <span class="badge bg-{% if dec.allowed %}success{% else %}danger{% endif %}">
-                {% if dec.allowed %}Allowed{% else %}Blocked{% endif %}
-              </span>
-            </div>
-            <div class="small text-muted">
-              By {{ dec.actor.username|default:"System" }} · {{ dec.timestamp|date:"d M Y H:i:s" }}
-            </div>
-            {% if dec.reasons %}
-              <ul class="small text-muted mb-0 mt-1 ps-3">
-                {% for r in dec.reasons %}
-                  <li>{{ r }}</li>
-                {% endfor %}
-              </ul>
-            {% endif %}
-          </li>
+            <li class="list-group-item py-3">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="fw-bold">{{ dec.get_action_display }}</span>
+                <span class="badge {% if dec.allowed %}bg-success-subtle text-success border border-success-subtle{% else %}bg-danger-subtle text-danger border border-danger-subtle{% endif %}">
+                  {% if dec.allowed %}Passed / Allowed{% else %}Blocked{% endif %}
+                </span>
+              </div>
+              <small class="text-muted d-block">
+                Evaluated by <strong>{{ dec.actor.username|default:"System" }}</strong> on {{ dec.timestamp|date:"d M Y H:i:s" }}
+              </small>
+              {% if dec.reasons %}
+                <ul class="small text-muted mb-0 mt-2 ps-3">
+                  {% for r in dec.reasons %}
+                    <li>{{ r }}</li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            </li>
           {% empty %}
-          <li class="list-group-item text-muted">No gate evaluations logged yet.</li>
+            <li class="list-group-item text-center text-muted py-4">No gate evaluations recorded yet.</li>
           {% endfor %}
         </ul>
       </div>
@@ -234,9 +306,9 @@
   </div>
 </div>
 
-<a href="{% url 'projects:detail' pk=project.pk %}" class="btn btn-secondary mb-4">Back to Project</a>
-
-<!-- Bootstrap 5 JS Bundle for interactive collapse elements -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<div class="d-flex justify-content-between align-items-center">
+  <a href="{% url 'projects:detail' pk=project.pk %}" class="btn btn-outline-secondary">
+    &larr; Back to Project Overview
+  </a>
+</div>
 {% endblock %}
-
