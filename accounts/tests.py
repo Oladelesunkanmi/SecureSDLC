@@ -41,4 +41,30 @@ class AccountsTests(TestCase):
         self.assertNotContains(response, "Traceback", status_code=404)
         self.assertNotContains(response, "Using the URLconf defined in", status_code=404)
 
+    def test_logout_get_renders_logged_out_page_and_clears_session(self):
+        user = User.objects.create_user(username="logout_u1", password="password123")
+        self.client.login(username="logout_u1", password="password123")
+        response = self.client.get(reverse("accounts:logout"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "accounts/logged_out.html")
+        self.assertContains(response, "Successfully Signed Out")
+        self.assertFalse(response.wsgi_request.user.is_authenticated)
+
+    def test_logout_post_renders_logged_out_page_and_clears_session(self):
+        user = User.objects.create_user(username="logout_u2", password="password123")
+        self.client.login(username="logout_u2", password="password123")
+        response = self.client.post(reverse("accounts:logout"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "accounts/logged_out.html")
+        self.assertContains(response, "Successfully Signed Out")
+        self.assertFalse(response.wsgi_request.user.is_authenticated)
+
+    def test_logout_post_with_next_redirects(self):
+        user = User.objects.create_user(username="logout_u3", password="password123")
+        self.client.login(username="logout_u3", password="password123")
+        response = self.client.post(f"{reverse('accounts:logout')}?next={reverse('accounts:login')}")
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, reverse("accounts:login"))
+        self.assertFalse(response.wsgi_request.user.is_authenticated)
+
 
