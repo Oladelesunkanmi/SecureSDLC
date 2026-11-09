@@ -95,3 +95,4 @@ The implementation mitigates this risk through defense-in-depth:
 
 ### Future Work
 Completely decouple automated screenshot generation from application middleware by using authenticated session cookies injected directly into the headless browser context via the test client or Playwright/Selenium CLI wrappers.
+

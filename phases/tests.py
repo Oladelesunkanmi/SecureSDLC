@@ -294,6 +294,26 @@ class PhaseViewTests(TestCase):
         # Should redirect back to phase detail (with messages)
         self.assertEqual(resp.status_code, 302)
 
+    def test_pm_get_phase_detail_page_200_and_gate_result_in_context(self):
+        """Regression test for UnboundLocalError in PhaseDetailView.get()."""
+        self.client.login(username="pm_view", password="password123")
+        url = reverse("phases:detail", kwargs={"project_id": self.project.pk, "kind": "requirements"})
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+        self.assertIn("gate_result", resp.context)
+        self.assertIn("advance_allowed", resp.context)
+        self.assertTrue(resp.context["advance_allowed"])
+
+    def test_non_member_cannot_get_phase_detail_page_404(self):
+        """Non-members receive 404 to avoid revealing project existence."""
+        outsider = User.objects.create_user(
+            username="outsider_view", password="password123", role=User.Role.DEVELOPER
+        )
+        self.client.login(username="outsider_view", password="password123")
+        url = reverse("phases:detail", kwargs={"project_id": self.project.pk, "kind": "requirements"})
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 404)
+
     def test_marking_item_done_without_evidence_is_refused(self):
         self.client.login(username="dev_view", password="password123")
         url = reverse("phases:detail", kwargs={"project_id": self.project.pk, "kind": "requirements"})

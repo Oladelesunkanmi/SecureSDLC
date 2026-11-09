@@ -48,7 +48,7 @@
     {% endif %}
 
     <div class="mt-3">
-      {% if can_advance and phase.status != "COMPLETED" %}
+      {% if advance_allowed and phase.status != "COMPLETED" %}
         <form method="post" action="{% url 'phases:advance' project_id=project.pk kind=phase.kind|lower %}" class="d-inline">
           {% csrf_token %}
           <button type="submit" class="btn btn-success" {% if not gate_result.allowed %}disabled title="Resolve blockers first"{% endif %}>

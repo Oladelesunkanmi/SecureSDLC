@@ -60,7 +60,7 @@ class PhaseDetailView(LoginRequiredMixin, ProjectMemberRequiredMixin, View):
             phase=phase,
         ).order_by("-created_at")
 
-        can_advance = can_advance_phase(request.user, self.project)
+        advance_allowed = can_advance_phase(request.user, self.project)
         can_reopen = can_reopen_phase(request.user, self.project) and self.project.sdlc_model == "AGILE"
 
         return render(request, "phases/phase_detail.html", {
@@ -70,7 +70,8 @@ class PhaseDetailView(LoginRequiredMixin, ProjectMemberRequiredMixin, View):
             "gate_result": gate_result,
             "recent_decisions": recent_decisions,
             "phase_vulns": phase_vulns,
-            "can_advance": can_advance,
+            "advance_allowed": advance_allowed,
+            "can_advance": advance_allowed,
             "can_reopen": can_reopen,
         })
 

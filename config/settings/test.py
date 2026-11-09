@@ -17,3 +17,4 @@ PASSWORD_HASHERS = [
 
 # In-memory email backend for tests
 EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
+
