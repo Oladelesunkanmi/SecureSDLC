@@ -66,6 +66,7 @@ class ProjectDetailView(LoginRequiredMixin, ProjectMemberRequiredMixin, View):
             "project": self.project,
             "phases": phases,
             "members": members_qs,
+            "membership": self.membership,
         })
 
 
