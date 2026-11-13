@@ -48,3 +48,4 @@ logs/
 
 # Django-Q cluster artefacts
 qcluster.log
+.claude
