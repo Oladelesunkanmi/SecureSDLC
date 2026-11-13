@@ -32,7 +32,7 @@ Decisions that the specification does not cover are recorded in
 
 ## Setup
 
-### 1. Clone and create the environment
+### 1.how to Clone and create the environment
 
 ```bash
 git clone https://github.com/Oladelesunkanmi/SecureSDLC.git
