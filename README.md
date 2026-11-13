@@ -9,7 +9,7 @@ until its required checklist items are complete with evidence and no unverified
 Critical or High findings remain open. OWASP ZAP is integrated rather than
 reimplemented.
 
-The full specification, business rules and build plan live in [CLAUDE.md](CLAUDE.md).
+
 Decisions that the specification does not cover are recorded in
 [docs/decisions.md](docs/decisions.md).
 
@@ -35,12 +35,13 @@ Decisions that the specification does not cover are recorded in
 ### 1. Clone and create the environment
 
 ```bash
-git clone <repository-url> secure-sdlc
+git clone https://github.com/Oladelesunkanmi/SecureSDLC.git
 cd secure-sdlc
 py -3.13 -m venv .venv
 ```
 
 ### 2. Install dependencies
+
 
 ```bash
 .venv/Scripts/python.exe -m pip install --upgrade pip
